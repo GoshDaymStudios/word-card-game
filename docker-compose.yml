@@ -1,0 +1,13 @@
+services:
+  web:
+    build:
+      context: ./app
+      dockerfile: Dockerfile
+    ports:
+      - "5173:5173"
+    env_file:
+      - .env
+    volumes:
+      - ./app:/app
+      - /app/node_modules
+    command: npm run dev -- --host 0.0.0.0
