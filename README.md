@@ -63,10 +63,11 @@ You can run the project in two ways:
 cd app
 npm install
 npm run dev
-```
 
-App runs on:  
+App runs on:
 http://localhost:5173
+
+```
 
 ---
 
@@ -76,10 +77,10 @@ From the project root:
 
 ```
 docker compose up --build
-```
 
-App runs on:  
+App runs on:
 http://localhost:5173
+```
 
 ---
 
