@@ -1,6 +1,7 @@
 # Word Card Game
 
-A web-based word game inspired by Wordle and Balatro.  
+A web-based word game inspired by Wordle and Balatro.
+
 Built as a small full-stack project with focus on gameplay, persistence, and simple deployment.
 
 ---
@@ -28,8 +29,10 @@ root/
 
 ### 1. Clone the repository
 
-git clone <repo-url>  
+```
+git clone <repo-url>
 cd word-card-game
+```
 
 ---
 
@@ -39,8 +42,10 @@ Create a `.env` file inside `/app` based on `.env.example`.
 
 Example:
 
-VITE_SUPABASE_URL=your_url  
+```
+VITE_SUPABASE_URL=your_url
 VITE_SUPABASE_PUBLISHABLE_KEY=your_key
+```
 
 Do NOT commit real secrets.
 
@@ -52,9 +57,11 @@ You can run the project in two ways:
 
 #### Option A – Local development (recommended)
 
-cd app  
-npm install  
+```
+cd app
+npm install
 npm run dev
+```
 
 App runs on:  
 http://localhost:5173
@@ -65,7 +72,9 @@ http://localhost:5173
 
 From the project root:
 
+```
 docker compose up --build
+```
 
 App runs on:  
 http://localhost:5173
@@ -102,19 +111,17 @@ This project uses a shared Supabase project.
 To get started:
 
 1. Ask a maintainer for the project URL and publishable key
-2. Create a local `.env` file inside `app/`
+2. Create a `.env` file inside `app/`
 3. Add the required variables:
 
+```
 VITE_SUPABASE_URL=your_url
 VITE_SUPABASE_PUBLISHABLE_KEY=your_key
+```
 
 Do not commit secrets or local `.env` files.
 
-> **Note:** This project uses Supabase. If you don’t already have access to the existing project, you can create your own and follow the setup steps found in the docs:
-
-4. Copy API URL and anon key into `.env`
-
----
+> **Note:** If you don’t have access to the shared project, create your own and follow the setup guide in `/docs`.
 
 ## Git Workflow
 
@@ -122,7 +129,9 @@ We use a simple feature branch workflow.
 
 ### 1. Create a branch
 
+```
 git checkout -b feature/short-description
+```
 
 Examples:
 
@@ -134,14 +143,18 @@ Examples:
 
 ### 2. Make changes and commit
 
-git add .  
+```
+git add .
 git commit -m "Add: short description"
+```
 
 ---
 
 ### 3. Push your branch
 
+```
 git push origin feature/short-description
+```
 
 ---
 
@@ -162,8 +175,10 @@ git push origin feature/short-description
 
 ### Sync your local branch
 
-git checkout main  
+```
+git checkout main
 git pull origin main
+```
 
 ---
 
