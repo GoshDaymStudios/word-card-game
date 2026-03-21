@@ -17,11 +17,13 @@ Built as a small full-stack project with focus on gameplay, persistence, and sim
 
 ## Project Structure
 
+```
 root/
-├── app/ # Frontend application  
-├── docker-compose.yml # Docker setup  
-├── docs/ # Notes / architecture / ideas  
+├── app/ # Frontend application
+├── docker-compose.yml # Docker setup
+├── docs/ # Notes / architecture / ideas
 ├── infra/ # Nginx + deployment config
+```
 
 ---
 
