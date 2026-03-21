@@ -97,24 +97,20 @@ Running `npm install` locally does not affect Docker, and Docker does not affect
 
 ## Supabase Setup
 
-1. Create a project on Supabase
-2. Enable authentication (email/password)
-3. Create the following tables:
+This project uses a shared Supabase project.
 
-profiles
+To get started:
 
-- id (uuid, same as auth user id)
-- username
-- created_at
+1. Ask a maintainer for the project URL and publishable key
+2. Create a local `.env` file inside `app/`
+3. Add the required variables:
 
-runs
+VITE_SUPABASE_URL=your_url
+VITE_SUPABASE_PUBLISHABLE_KEY=your_key
 
-- id
-- user_id
-- score
-- run_data (json)
-- is_shared
-- created_at
+Do not commit secrets or local `.env` files.
+
+> **Note:** This project uses Supabase. If you don’t already have access to the existing project, you can create your own and follow the setup steps found in the docs:
 
 4. Copy API URL and anon key into `.env`
 
