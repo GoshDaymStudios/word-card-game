@@ -1,0 +1,39 @@
+# GitHub Actions CI workflow for the Node.js project (word-card-game).
+# Runs on push and pull requests to main.
+# Checks if code is valid, sets up Node.js, installs deps, and builds the app.
+# This ensures that the code can be built successfully before deployment.
+
+name: CI
+
+on:
+  push:
+    branches:
+      - "**"
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    defaults:
+      run:
+        working-directory: app
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+          cache-dependency-path: app/package-lock.json
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build app
+        run: npm run build
