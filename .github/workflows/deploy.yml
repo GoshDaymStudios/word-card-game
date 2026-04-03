@@ -26,6 +26,6 @@ jobs:
           key: ${{ secrets.VPS_SSH_KEY }}
           port: ${{ secrets.VPS_PORT }}
           script: |
-            cd /path/to/word-card-game # Update this path to where your app is located on the VPS
+            cd /home/tor/apps/word-card-game
             git pull origin main
-            docker compose up -d --build 
+            docker compose up -d --build
