@@ -127,6 +127,10 @@ re-runnable. The individual statements are just documented here for reference.
 
 ## 10. Applying to an EXISTING database (recommended) — or starting fresh
 
+> 📄 The ready-to-run version of all this lives in **`infra/supabase/schema.sql`** —
+> just open that file, copy it, and paste into the Supabase SQL Editor. The blocks below
+> are the same SQL, kept here for reference/explanation.
+
 If you already have `profiles` + `runs` (the shared project does), you do NOT need to start
 over. The changes are additive. **Supabase → SQL Editor → New query**, paste, Run.
 
