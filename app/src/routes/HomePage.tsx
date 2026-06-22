@@ -32,8 +32,16 @@ export default function HomePage() {
             flexWrap: "wrap",
           }}
         >
+          <Link to="/daily">
+            <button>Daily</button>
+          </Link>
+
           <Link to="/game">
             <button>Start Game</button>
+          </Link>
+
+          <Link to="/leaderboard">
+            <button>Leaderboard</button>
           </Link>
 
           <Link to="/auth">

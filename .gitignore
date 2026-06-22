@@ -15,6 +15,9 @@ lerna-debug.log*
 dist-ssr
 *.local
 
+# Local tooling config (Claude Code preview, etc.)
+.claude/
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json
