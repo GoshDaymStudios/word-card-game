@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { createRun, submitGuess, chooseModifier } from "./gameEngine";
+import { createRun, submitGuess, chooseModifier, continueAfterFailure } from "./gameEngine";
 import type { ModifierId } from "./modifiers";
 
 export function useGame() {
@@ -17,10 +17,15 @@ export function useGame() {
     setRun((current) => chooseModifier(current, id));
   }
 
+  function continueRound() {
+    setRun((current) => continueAfterFailure(current));
+  }
+
   return {
     run,
     startNewGame,
     playGuess,
     pickModifier,
+    continueRound,
   };
 }

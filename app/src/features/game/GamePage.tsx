@@ -37,7 +37,7 @@ function Cell({ letter, result }: { letter: string; result?: LetterResult }) {
 }
 
 export default function GamePage() {
-  const { run, startNewGame, playGuess, pickModifier } = useGame();
+  const { run, startNewGame, playGuess, pickModifier, continueRound } = useGame();
   const [input, setInput] = useState("");
   const [message, setMessage] = useState("");
   const [savedId, setSavedId] = useState<number | null>(null);
@@ -168,6 +168,20 @@ export default function GamePage() {
             style={{ padding: "0.6rem", fontSize: "1.1rem", textAlign: "center", letterSpacing: 4 }}
           />
           <button onClick={handleSubmit}>Guess</button>
+        </div>
+      )}
+
+      {run.status === "round-failed" && (
+        <div style={{ display: "grid", gap: "0.75rem", maxWidth: 360, margin: "0 auto" }}>
+          <h2 style={{ margin: 0, color: "#c0392b" }}>Round failed — lost a life 💔</h2>
+          <p style={{ margin: 0 }}>
+            Scored <strong>{round.roundScore}</strong> / target <strong>{run.targetScore}</strong>.
+            {round.roundScore === 0
+              ? ` The word was “${round.answer.toUpperCase()}”.`
+              : ""}
+          </p>
+          <p style={{ margin: 0 }}>❤️ {run.lives} {run.lives === 1 ? "life" : "lives"} left</p>
+          <button onClick={continueRound}>Try this ante again</button>
         </div>
       )}
 

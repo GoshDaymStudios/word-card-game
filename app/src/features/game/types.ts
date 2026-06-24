@@ -23,6 +23,7 @@ export type RunState = {
   antesCleared: number;
   roundNumber: number; // global counter, drives the seeded RNG
   offered: ModifierId[]; // the 3 choices shown while status === "choosing"
-  status: "playing" | "choosing" | "won" | "lost";
+  // round-failed = missed the ante target but still have lives left (pause screen)
+  status: "playing" | "choosing" | "round-failed" | "won" | "lost";
   round: RoundState;
 };
