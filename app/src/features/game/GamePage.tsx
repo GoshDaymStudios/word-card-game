@@ -5,7 +5,7 @@ import { getModifier } from "./modifiers";
 import { saveRun, shareRun } from "../../lib/runs";
 import { Tile } from "../../components/Tile";
 import { ModifierCard } from "../../components/ModifierCard";
-import { ensureMusic, stopMusic, playSfx } from "../../lib/sound";
+import { ensureMusic, stopMusic, playSfx, playFlipRow } from "../../lib/sound";
 
 const CELL = 46;
 
@@ -37,6 +37,7 @@ export default function GamePage() {
       return;
     }
     playGuess(input);
+    playFlipRow(len);
     setInput("");
     setMessage("");
   }

@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { useDaily } from "./useDaily";
 import { saveRun } from "../../lib/runs";
 import { Tile } from "../../components/Tile";
+import { playFlipRow } from "../../lib/sound";
 
 export default function DailyPage() {
   const { state, streak, guess, reveal, shareText, score, dateKey } = useDaily();
@@ -20,6 +21,7 @@ export default function DailyPage() {
       return;
     }
     guess(input);
+    playFlipRow(len);
     setInput("");
     setToast("");
   }

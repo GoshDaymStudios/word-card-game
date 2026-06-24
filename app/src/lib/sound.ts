@@ -42,39 +42,61 @@ export function setMuted(value: boolean): void {
 
 // ---- Built-in synth click (fallback when no click.mp3) ---------------------
 let audioCtx: AudioContext | null = null;
-function synthClick(): void {
+function getCtx(): AudioContext | null {
   try {
     const Ctx = window.AudioContext ?? (window as unknown as { webkitAudioContext: typeof AudioContext }).webkitAudioContext;
     audioCtx ??= new Ctx();
     if (audioCtx.state === "suspended") void audioCtx.resume();
-    const t = audioCtx.currentTime;
-    const osc = audioCtx.createOscillator();
-    const gain = audioCtx.createGain();
-    osc.type = "triangle";
-    osc.frequency.setValueAtTime(420, t);
-    gain.gain.setValueAtTime(0.0001, t);
-    gain.gain.exponentialRampToValueAtTime(0.16, t + 0.005);
-    gain.gain.exponentialRampToValueAtTime(0.0001, t + 0.09);
-    osc.connect(gain);
-    gain.connect(audioCtx.destination);
-    osc.start(t);
-    osc.stop(t + 0.1);
+    return audioCtx;
   } catch {
-    /* audio unavailable — ignore */
+    return null;
   }
 }
 
+// Short synth blip — fallback for "click" when no click.<ext> is present.
+function synthBlip(freq: number, peak: number, dur: number, type: OscillatorType): void {
+  const ctx = getCtx();
+  if (!ctx) return;
+  const t = ctx.currentTime;
+  const osc = ctx.createOscillator();
+  const gain = ctx.createGain();
+  osc.type = type;
+  osc.frequency.setValueAtTime(freq, t);
+  gain.gain.setValueAtTime(0.0001, t);
+  gain.gain.exponentialRampToValueAtTime(peak, t + 0.005);
+  gain.gain.exponentialRampToValueAtTime(0.0001, t + dur);
+  osc.connect(gain);
+  gain.connect(ctx.destination);
+  osc.start(t);
+  osc.stop(t + dur + 0.01);
+}
+
+type SfxOpts = { volume?: number; rate?: number };
+
 // ---- SFX (one-shot) --------------------------------------------------------
-export function playSfx(name: string, volume = 0.5): void {
+export function playSfx(name: string, opts: SfxOpts = {}): void {
   if (muted) return;
+  const { volume = 0.5, rate = 1 } = opts;
   const url = urlFor(sfxFiles, name);
   if (!url) {
-    if (name === "click") synthClick();
+    // Built-in synth fallbacks so the UI is audible before any files are added.
+    if (name === "click") synthBlip(420, 0.16, 0.09, "triangle");
+    else if (name === "flip") synthBlip(300 * rate, 0.08, 0.06, "square");
     return;
   }
   const a = new Audio(url);
   a.volume = volume;
+  a.playbackRate = rate; // pitch/speed (used for the rising flip cascade)
   void a.play().catch(() => {});
+}
+
+// Play the flip sfx once per letter, staggered to match the tile flip animation,
+// with a slight pitch rise across the row (Balatro-style cascade).
+export function playFlipRow(count = 5, staggerMs = 90): void {
+  for (let i = 0; i < count; i++) {
+    const rate = 1 + i * 0.06;
+    window.setTimeout(() => playSfx("flip", { volume: 0.35, rate }), i * staggerMs);
+  }
 }
 
 // ---- Music (looping background) --------------------------------------------

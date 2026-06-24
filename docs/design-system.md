@@ -103,8 +103,10 @@ app/src/assets/
   the first user gesture; the loader auto-resumes on the first click/tap.
 - **Mute** (`SoundToggle` 🔊 in the nav) is remembered in `localStorage`.
 
-Wired already: a click sound on every button; `win`/`lose` stings; `roguelike` music loops
-on `/game`. Add a track by naming the file after its key.
+Wired already: a click sound on every button; a **flip cascade** (`playFlipRow` plays the
+`flip` sfx once per letter, staggered with the tile animation and pitched up across the row —
+one clip is enough); `win`/`lose` stings; `roguelike` music loops on `/game`. Add a track by
+naming the file after its key.
 
 ## 5. Implementation status
 
