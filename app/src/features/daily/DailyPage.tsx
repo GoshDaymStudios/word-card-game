@@ -1,39 +1,9 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { useDaily } from "./useDaily";
 import { saveRun } from "../../lib/runs";
-import type { LetterResult } from "../../lib/words";
-
-const COLORS: Record<LetterResult, string> = {
-  correct: "#6aaa64",
-  present: "#c9b458",
-  absent: "#787c7e",
-};
-
-const CELL = 52;
-
-function Cell({ letter, result }: { letter: string; result?: LetterResult }) {
-  const filled = result !== undefined;
-  return (
-    <div
-      style={{
-        width: CELL,
-        height: CELL,
-        display: "grid",
-        placeItems: "center",
-        fontSize: "1.6rem",
-        fontWeight: 700,
-        textTransform: "uppercase",
-        color: filled ? "#fff" : "#1a1a1b",
-        background: filled ? COLORS[result] : "transparent",
-        border: `2px solid ${filled ? COLORS[result] : "#d3d6da"}`,
-        borderRadius: 4,
-      }}
-    >
-      {letter}
-    </div>
-  );
-}
+import { Tile } from "../../components/Tile";
+import { playFlipRow, playSfx } from "../../lib/sound";
 
 export default function DailyPage() {
   const { state, streak, guess, reveal, shareText, score, dateKey } = useDaily();
@@ -44,6 +14,20 @@ export default function DailyPage() {
   const len = state.answer.length;
   const done = state.status !== "playing";
 
+  // Intro sting when entering the daily game.
+  useEffect(() => {
+    playSfx("Goshdaymstudios-original", { volume: 0.7 });
+  }, []);
+
+  // Win / lose sting, after the flip cascade of the final guess.
+  useEffect(() => {
+    if (state.status === "won" || state.status === "lost") {
+      const sting = state.status === "won" ? "win" : "lose";
+      const t = window.setTimeout(() => playSfx(sting, { volume: 0.7 }), 750);
+      return () => clearTimeout(t);
+    }
+  }, [state.status]);
+
   function handleSubmit() {
     if (done) return;
     if (input.length !== len) {
@@ -51,6 +35,7 @@ export default function DailyPage() {
       return;
     }
     guess(input);
+    playFlipRow(len);
     setInput("");
     setToast("");
   }
@@ -85,11 +70,11 @@ export default function DailyPage() {
     const cells = [];
     for (let c = 0; c < len; c++) {
       if (submitted) {
-        cells.push(<Cell key={c} letter={state.guesses[r][c]} result={submitted[c]} />);
+        cells.push(<Tile key={c} index={c} letter={state.guesses[r][c]} result={submitted[c]} />);
       } else if (isCurrent) {
-        cells.push(<Cell key={c} letter={input[c] ?? ""} />);
+        cells.push(<Tile key={c} letter={input[c] ?? ""} />);
       } else {
-        cells.push(<Cell key={c} letter="" />);
+        cells.push(<Tile key={c} letter="" />);
       }
     }
     rows.push(
@@ -102,7 +87,6 @@ export default function DailyPage() {
   return (
     <main style={{ padding: "2rem", maxWidth: 460, margin: "0 auto", textAlign: "center" }}>
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-        <Link to="/">← Home</Link>
         <h1 style={{ margin: 0 }}>Daily</h1>
         <span>🔥 {streak.streak}</span>
       </div>

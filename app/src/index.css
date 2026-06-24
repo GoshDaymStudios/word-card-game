@@ -1,23 +1,33 @@
+/* ============================================================================
+   Word Card — theme. "Neon Twilight" palette (Balatro-inspired, our own colors).
+   Re-palette by editing the variables in :root. See docs/design-system.md.
+   ========================================================================== */
 :root {
-  --text: #6b6375;
-  --text-h: #08060d;
-  --bg: #fff;
-  --border: #e5e4e7;
-  --code-bg: #f4f3ec;
-  --accent: #aa3bff;
-  --accent-bg: rgba(170, 59, 255, 0.1);
-  --accent-border: rgba(170, 59, 255, 0.5);
-  --social-bg: rgba(244, 243, 236, 0.5);
-  --shadow:
-    rgba(0, 0, 0, 0.1) 0 10px 15px -3px, rgba(0, 0, 0, 0.05) 0 4px 6px -2px;
+  /* palette */
+  --bg: #0f0c18;
+  --panel: #1d1730;
+  --panel-2: #271f3f;
+  --border: #3a2f56;
+  --text-h: #f1ecff;
+  --text: #a99fc4;
+  --accent: #a855f7;
+  --base: #22d3ee; /* "chips" / base score */
+  --mult: #fb5a76; /* multiplier */
+  --gold: #f5c542; /* money / rewards */
 
-  --sans: system-ui, 'Segoe UI', Roboto, sans-serif;
-  --heading: system-ui, 'Segoe UI', Roboto, sans-serif;
+  --accent-bg: rgba(168, 85, 247, 0.16);
+  --accent-border: rgba(168, 85, 247, 0.55);
+  --shadow:
+    rgba(0, 0, 0, 0.45) 0 10px 22px -8px, rgba(0, 0, 0, 0.3) 0 4px 8px -4px;
+
+  /* type */
+  --sans: system-ui, "Segoe UI", Roboto, sans-serif;
+  --display: "Lilita One", system-ui, sans-serif;
   --mono: ui-monospace, Consolas, monospace;
 
-  font: 18px/145% var(--sans);
-  letter-spacing: 0.18px;
-  color-scheme: light dark;
+  font: 17px/145% var(--sans);
+  letter-spacing: 0.1px;
+  color-scheme: dark;
   color: var(--text);
   background: var(--bg);
   font-synthesis: none;
@@ -30,66 +40,77 @@
   }
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --text: #9ca3af;
-    --text-h: #f3f4f6;
-    --bg: #16171d;
-    --border: #2e303a;
-    --code-bg: #1f2028;
-    --accent: #c084fc;
-    --accent-bg: rgba(192, 132, 252, 0.15);
-    --accent-border: rgba(192, 132, 252, 0.5);
-    --social-bg: rgba(47, 48, 58, 0.5);
-    --shadow:
-      rgba(0, 0, 0, 0.4) 0 10px 15px -3px, rgba(0, 0, 0, 0.25) 0 4px 6px -2px;
-  }
+/* Alternative palettes — toggled via <html data-theme="..."> (see ThemeToggle). */
+:root[data-theme="ember"] {
+  --bg: #140f0c;
+  --panel: #221813;
+  --panel-2: #2e2017;
+  --border: #4a3322;
+  --text-h: #fff3e8;
+  --text: #c9b3a1;
+  --accent: #f97316;
+  --base: #fbbf24;
+  --mult: #ef4444;
+  --gold: #fde68a;
+  --accent-bg: rgba(249, 115, 22, 0.16);
+  --accent-border: rgba(249, 115, 22, 0.55);
+}
+:root[data-theme="deepsea"] {
+  --bg: #07171a;
+  --panel: #0e2329;
+  --panel-2: #143038;
+  --border: #1f4651;
+  --text-h: #e7fbff;
+  --text: #94c0c9;
+  --accent: #2dd4bf;
+  --base: #38bdf8;
+  --mult: #f472b6;
+  --gold: #facc15;
+  --accent-bg: rgba(45, 212, 191, 0.16);
+  --accent-border: rgba(45, 212, 191, 0.55);
+}
 
-  #social .button-icon {
-    filter: invert(1) brightness(2);
-  }
+body {
+  margin: 0;
+  color: var(--text);
+  min-height: 100svh;
+  background:
+    radial-gradient(1200px 600px at 18% -10%, rgba(168, 85, 247, 0.2), transparent 60%),
+    radial-gradient(1000px 700px at 100% 0%, rgba(34, 211, 238, 0.1), transparent 55%),
+    radial-gradient(900px 700px at 50% 120%, rgba(251, 90, 118, 0.12), transparent 55%),
+    var(--bg);
+  background-attachment: fixed;
 }
 
 #root {
-  width: 1126px;
-  max-width: 100%;
+  width: 100%;
   margin: 0 auto;
   text-align: center;
-  border-inline: 1px solid var(--border);
   min-height: 100svh;
   display: flex;
   flex-direction: column;
   box-sizing: border-box;
 }
 
-body {
-  margin: 0;
-}
-
 h1,
 h2 {
-  font-family: var(--heading);
-  font-weight: 500;
+  font-family: var(--display);
+  font-weight: 400;
   color: var(--text-h);
+  letter-spacing: 0.4px;
 }
-
 h1 {
-  font-size: 56px;
-  letter-spacing: -1.68px;
-  margin: 32px 0;
+  font-size: 40px;
+  margin: 18px 0;
   @media (max-width: 1024px) {
-    font-size: 36px;
-    margin: 20px 0;
+    font-size: 30px;
+    margin: 14px 0;
   }
 }
 h2 {
-  font-size: 24px;
-  line-height: 118%;
-  letter-spacing: -0.24px;
+  font-size: 23px;
+  line-height: 120%;
   margin: 0 0 8px;
-  @media (max-width: 1024px) {
-    font-size: 20px;
-  }
 }
 p {
   margin: 0;
@@ -98,14 +119,80 @@ p {
 code,
 .counter {
   font-family: var(--mono);
-  display: inline-flex;
-  border-radius: 4px;
   color: var(--text-h);
 }
-
 code {
-  font-size: 15px;
-  line-height: 135%;
-  padding: 4px 8px;
-  background: var(--code-bg);
+  font-size: 14px;
+  padding: 3px 7px;
+  border-radius: 4px;
+  background: var(--panel-2);
+}
+
+/* ---- Surfaces -------------------------------------------------------------- */
+.panel,
+.card {
+  background: linear-gradient(160deg, var(--panel-2), var(--panel));
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  box-shadow: var(--shadow);
+}
+
+/* ---- Buttons / inputs / links --------------------------------------------- */
+button {
+  font: inherit;
+  font-weight: 600;
+  color: var(--text-h);
+  background: var(--accent-bg);
+  border: 1px solid var(--accent-border);
+  border-radius: 10px;
+  padding: 0.55rem 1rem;
+  cursor: pointer;
+  transition:
+    background 0.15s ease,
+    color 0.15s ease,
+    transform 0.05s ease,
+    box-shadow 0.15s ease;
+}
+button:hover {
+  background: var(--accent);
+  color: #fff;
+  box-shadow: 0 0 0 1px var(--accent-border), 0 6px 18px -6px var(--accent);
+}
+button:active {
+  transform: translateY(1px);
+}
+button:disabled {
+  opacity: 0.45;
+  cursor: default;
+}
+button:disabled:hover {
+  background: var(--accent-bg);
+  color: var(--text-h);
+  box-shadow: none;
+}
+
+input {
+  font: inherit;
+  color: var(--text-h);
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 0.55rem 0.75rem;
+}
+input::placeholder {
+  color: var(--text);
+  opacity: 0.7;
+}
+input:focus {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-bg);
+}
+
+a {
+  color: var(--accent);
+  text-decoration: none;
+}
+a:hover {
+  text-decoration: underline;
 }

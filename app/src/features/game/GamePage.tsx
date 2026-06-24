@@ -1,46 +1,41 @@
-import { useState } from "react";
-import { Link } from "react-router-dom";
+import { useEffect, useState } from "react";
 import { useGame } from "./useGame";
 import { FINAL_ANTE } from "./gameEngine";
 import { getModifier } from "./modifiers";
 import { saveRun, shareRun } from "../../lib/runs";
-import type { LetterResult } from "../../lib/words";
+import { Tile } from "../../components/Tile";
+import { ModifierCard } from "../../components/ModifierCard";
+import { ensureMusic, stopMusic, playSfx, playFlipRow } from "../../lib/sound";
 
-const COLORS: Record<LetterResult, string> = {
-  correct: "#6aaa64",
-  present: "#c9b458",
-  absent: "#787c7e",
-};
 const CELL = 46;
-
-function Cell({ letter, result }: { letter: string; result?: LetterResult }) {
-  const filled = result !== undefined;
-  return (
-    <div
-      style={{
-        width: CELL,
-        height: CELL,
-        display: "grid",
-        placeItems: "center",
-        fontSize: "1.4rem",
-        fontWeight: 700,
-        textTransform: "uppercase",
-        color: filled ? "#fff" : "#1a1a1b",
-        background: filled ? COLORS[result] : "transparent",
-        border: `2px solid ${filled ? COLORS[result] : "#d3d6da"}`,
-        borderRadius: 4,
-      }}
-    >
-      {letter}
-    </div>
-  );
-}
 
 export default function GamePage() {
   const { run, startNewGame, playGuess, pickModifier, continueRound } = useGame();
   const [input, setInput] = useState("");
   const [message, setMessage] = useState("");
   const [savedId, setSavedId] = useState<number | null>(null);
+
+  // Intro sting when entering the run.
+  useEffect(() => {
+    playSfx("Goshdaymstudios-original", { volume: 0.7 });
+  }, []);
+
+  // Music while playing; on game over wait for the flip cascade to finish, then cut the
+  // music and play the win/lose sting so it lands cleanly.
+  useEffect(() => {
+    if (run.status === "won" || run.status === "lost") {
+      const sting = run.status === "won" ? "win" : "lose";
+      const t = window.setTimeout(() => {
+        stopMusic();
+        playSfx(sting, { volume: 0.7 });
+      }, 750);
+      return () => clearTimeout(t);
+    }
+    ensureMusic("roguelike");
+  }, [run.status]);
+
+  // Stop music when leaving the page.
+  useEffect(() => () => stopMusic(), []);
 
   const { round } = run;
   const len = 5;
@@ -52,6 +47,7 @@ export default function GamePage() {
       return;
     }
     playGuess(input);
+    playFlipRow(len);
     setInput("");
     setMessage("");
   }
@@ -100,9 +96,9 @@ export default function GamePage() {
     const isCurrent = !submitted && r === round.guesses.length && run.status === "playing";
     const cells = [];
     for (let c = 0; c < len; c++) {
-      if (submitted) cells.push(<Cell key={c} letter={round.guesses[r][c]} result={submitted[c]} />);
-      else if (isCurrent) cells.push(<Cell key={c} letter={input[c] ?? ""} />);
-      else cells.push(<Cell key={c} letter="" />);
+      if (submitted) cells.push(<Tile key={c} index={c} size={CELL} letter={round.guesses[r][c]} result={submitted[c]} />);
+      else if (isCurrent) cells.push(<Tile key={c} size={CELL} letter={input[c] ?? ""} />);
+      else cells.push(<Tile key={c} size={CELL} letter="" />);
     }
     rows.push(
       <div key={r} style={{ display: "flex", gap: 6 }}>
@@ -114,7 +110,6 @@ export default function GamePage() {
   return (
     <main style={{ padding: "1.5rem", maxWidth: 460, margin: "0 auto", textAlign: "center" }}>
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-        <Link to="/">← Home</Link>
         <h1 style={{ margin: 0 }}>Run</h1>
         <span>❤️ {run.lives}</span>
       </div>
@@ -139,18 +134,13 @@ export default function GamePage() {
         </span>
       </div>
 
-      {/* Held modifiers */}
+      {/* Held modifiers — Balatro-style joker row (art when present, else fallback) */}
       {run.modifiers.length > 0 && (
-        <div style={{ display: "flex", gap: 6, flexWrap: "wrap", justifyContent: "center", marginBottom: "1rem" }}>
-          {run.modifiers.map((id) => (
-            <span
-              key={id}
-              title={getModifier(id).description}
-              style={{ background: "#eee", borderRadius: 12, padding: "2px 10px", fontSize: "0.8rem" }}
-            >
-              {getModifier(id).name}
-            </span>
-          ))}
+        <div style={{ display: "flex", gap: 8, flexWrap: "wrap", justifyContent: "center", marginBottom: "1rem" }}>
+          {run.modifiers.map((id) => {
+            const m = getModifier(id);
+            return <ModifierCard key={id} id={id} name={m.name} description={m.description} />;
+          })}
         </div>
       )}
 

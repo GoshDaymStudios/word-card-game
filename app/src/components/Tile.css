@@ -1,0 +1,50 @@
+.tile {
+  display: grid;
+  place-items: center;
+  font-size: 1.5rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: var(--text-h);
+  background: rgba(255, 255, 255, 0.03);
+  border: 2px solid var(--border);
+  border-radius: 8px;
+  box-sizing: border-box;
+}
+
+.tile.revealed {
+  color: #fff;
+  border-color: transparent;
+  transform-origin: center;
+  will-change: transform;
+  backface-visibility: hidden;
+  animation: tile-flip 0.38s ease-in-out;
+}
+
+.tile.correct {
+  background: #6aaa64;
+}
+.tile.present {
+  background: #c9b458;
+}
+.tile.absent {
+  background: #787c7e;
+}
+
+@keyframes tile-flip {
+  0% {
+    transform: perspective(600px) rotateX(0deg);
+  }
+  50% {
+    transform: perspective(600px) rotateX(-88deg);
+  }
+  100% {
+    transform: perspective(600px) rotateX(0deg);
+  }
+}
+
+/* Respect users who prefer less motion. */
+@media (prefers-reduced-motion: reduce) {
+  .tile.revealed {
+    animation: none;
+  }
+}

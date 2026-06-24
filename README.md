@@ -1,4 +1,4 @@
-# Word Card Game
+# Cards & Words
 
 A web-based word game inspired by Wordle and Balatro.
 
