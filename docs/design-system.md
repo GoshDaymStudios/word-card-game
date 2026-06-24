@@ -4,11 +4,16 @@ Visual direction + the art/asset pipeline. Heavy inspiration from **Balatro** (c
 panels, glossy cards, a bold "base × mult" scoring readout, juicy neon accents) — but with
 **our own palette** so it doesn't read as a clone.
 
-## 1. Palette (CSS variables)
+## 1. Palette (CSS variables) + live theme switcher
 
 The whole look is driven by variables in `app/src/index.css` `:root`. **Re-palette by editing
 these ~10 values — nothing else.** Default direction: **"Neon Twilight"** — deep violet night
 instead of Balatro's blue/green felt.
+
+Three palettes ship and can be switched **live** from the nav (`ThemeToggle` → sets
+`<html data-theme="twilight|ember|deepsea">`, remembered in `localStorage`): Twilight
+(violet), Ember (warm), Deep Sea (teal). Add a 4th by copying a `:root[data-theme="..."]`
+block in `index.css` and an entry in `ThemeToggle.tsx`.
 
 | Variable | Role | Default |
 |---|---|---|

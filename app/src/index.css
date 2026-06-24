@@ -40,6 +40,36 @@
   }
 }
 
+/* Alternative palettes — toggled via <html data-theme="..."> (see ThemeToggle). */
+:root[data-theme="ember"] {
+  --bg: #140f0c;
+  --panel: #221813;
+  --panel-2: #2e2017;
+  --border: #4a3322;
+  --text-h: #fff3e8;
+  --text: #c9b3a1;
+  --accent: #f97316;
+  --base: #fbbf24;
+  --mult: #ef4444;
+  --gold: #fde68a;
+  --accent-bg: rgba(249, 115, 22, 0.16);
+  --accent-border: rgba(249, 115, 22, 0.55);
+}
+:root[data-theme="deepsea"] {
+  --bg: #07171a;
+  --panel: #0e2329;
+  --panel-2: #143038;
+  --border: #1f4651;
+  --text-h: #e7fbff;
+  --text: #94c0c9;
+  --accent: #2dd4bf;
+  --base: #38bdf8;
+  --mult: #f472b6;
+  --gold: #facc15;
+  --accent-bg: rgba(45, 212, 191, 0.16);
+  --accent-border: rgba(45, 212, 191, 0.55);
+}
+
 body {
   margin: 0;
   color: var(--text);
