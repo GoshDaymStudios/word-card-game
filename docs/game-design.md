@@ -32,7 +32,7 @@ After those: **Phase 6 (juice/polish)** is the main remaining build work.
 | 1 | `mode` column on `runs` + RLS | ✅ live (ran `infra/supabase/schema.sql`; diagnostics confirmed) |
 | 2 | Daily mode (`/daily`) — seed word, 6 guesses, streak, emoji share, reveal power-up | ✅ done + played in browser |
 | 2 | Roguelike mode (`/game`) — antes 1–8, scoring×mult, pick-1-of-3 modifiers, win/lose | ✅ done + played in browser |
-| 3 | DevOps: `/health`, nginx conf, CI lint+test, RLS, monitoring | 🟡 done: container nginx (SPA fallback + `/health`), host proxy example, CI runs lint+test+build, RLS live. Left: deploy-verify `/health`, UptimeRobot |
+| 3 | DevOps: `/health`, nginx conf, CI lint+test, RLS, monitoring | 🟡 done: container nginx (SPA fallback + `/health`), host proxy example, CI lint+test+build, RLS live, Uptime Kuma in docker-compose + README "Health & Monitoring". Left: deploy-verify `/health`, set up UptimeRobot (external) |
 | 4 | Wire completed runs → Supabase, both modes | ✅ done — both save via `lib/runs.ts`. Daily **verified live**; roguelike save pending manual check |
 | 5 | Two leaderboards (filter `mode`) + share page `/share/:id` | ✅ done — mode-tabbed `LeaderboardPage` (daily verified live), `SharePage`, GamePage share button (pending manual check) |
 | 6 | Juice/polish (animation, sound) | ⬜ not started |
@@ -43,7 +43,10 @@ After those: **Phase 6 (juice/polish)** is the main remaining build work.
       "Roguelike" → Share → `/share/:id`. (Daily is verified; roguelike + share are not.)
 - [ ] **MANUAL: deploy + verify `/health` and deep-link refresh** don't 404 (new nginx.conf).
       Claude's sandbox has no Docker, so this is a deploy-time check.
-- [ ] **MANUAL: UptimeRobot** monitor on `/health`.
+- [ ] **MANUAL: UptimeRobot** monitor on `/health` (external = the real check). Uptime Kuma
+      is already wired in docker-compose as the same-host dashboard/demo (see README).
+- [ ] **MANUAL: Uptime Kuma first-run setup** after deploy (SSH tunnel to `127.0.0.1:3001`,
+      create admin user, add a monitor on the app's `/health`).
 - [ ] **Push branch + open PR** (outward-facing — confirm first).
 - [ ] **Daily allows multiple saves per day** → leaderboard can show duplicate entries per
       user/day. Add a "one save per day" guard or a "best per user" leaderboard query.
