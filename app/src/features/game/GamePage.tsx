@@ -15,12 +15,23 @@ export default function GamePage() {
   const [message, setMessage] = useState("");
   const [savedId, setSavedId] = useState<number | null>(null);
 
-  // Music while playing; on game over play the sting and cut the music so it lands.
+  // Intro sting when entering the run.
   useEffect(() => {
-    if (run.status === "won") playSfx("win");
-    else if (run.status === "lost") playSfx("lose");
-    if (run.status === "won" || run.status === "lost") stopMusic();
-    else ensureMusic("roguelike");
+    playSfx("Goshdaymstudios-original", { volume: 0.7 });
+  }, []);
+
+  // Music while playing; on game over wait for the flip cascade to finish, then cut the
+  // music and play the win/lose sting so it lands cleanly.
+  useEffect(() => {
+    if (run.status === "won" || run.status === "lost") {
+      const sting = run.status === "won" ? "win" : "lose";
+      const t = window.setTimeout(() => {
+        stopMusic();
+        playSfx(sting, { volume: 0.7 });
+      }, 750);
+      return () => clearTimeout(t);
+    }
+    ensureMusic("roguelike");
   }, [run.status]);
 
   // Stop music when leaving the page.

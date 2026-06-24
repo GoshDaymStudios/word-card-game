@@ -1,9 +1,9 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { useDaily } from "./useDaily";
 import { saveRun } from "../../lib/runs";
 import { Tile } from "../../components/Tile";
-import { playFlipRow } from "../../lib/sound";
+import { playFlipRow, playSfx } from "../../lib/sound";
 
 export default function DailyPage() {
   const { state, streak, guess, reveal, shareText, score, dateKey } = useDaily();
@@ -13,6 +13,11 @@ export default function DailyPage() {
 
   const len = state.answer.length;
   const done = state.status !== "playing";
+
+  // Intro sting when entering the daily game.
+  useEffect(() => {
+    playSfx("Goshdaymstudios-original", { volume: 0.7 });
+  }, []);
 
   function handleSubmit() {
     if (done) return;
