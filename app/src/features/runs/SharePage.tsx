@@ -5,15 +5,13 @@ import { getSharedRun, type SharedRun } from "../../lib/runs";
 // Public, read-only view of a single shared run (no auth needed).
 export default function SharePage() {
   const { id } = useParams<{ id: string }>();
+  const numId = Number(id);
+  const validId = id !== undefined && Number.isFinite(numId);
   const [run, setRun] = useState<SharedRun | null>(null);
   const [message, setMessage] = useState("Loading…");
 
   useEffect(() => {
-    const numId = Number(id);
-    if (!Number.isFinite(numId)) {
-      setMessage("Invalid run id.");
-      return;
-    }
+    if (!validId) return;
     let active = true;
     getSharedRun(numId).then(({ run, error }) => {
       if (!active) return;
@@ -23,7 +21,7 @@ export default function SharePage() {
     return () => {
       active = false;
     };
-  }, [id]);
+  }, [validId, numId]);
 
   return (
     <main style={{ padding: "2rem", maxWidth: 520, margin: "0 auto", textAlign: "center" }}>
@@ -34,7 +32,7 @@ export default function SharePage() {
       </div>
 
       {!run ? (
-        <p style={{ marginTop: "2rem" }}>{message}</p>
+        <p style={{ marginTop: "2rem" }}>{!validId ? "Invalid run id." : message}</p>
       ) : (
         <section style={{ marginTop: "2rem", display: "grid", gap: "0.6rem" }}>
           <p style={{ fontSize: "1.1rem" }}>

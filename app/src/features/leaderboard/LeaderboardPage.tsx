@@ -5,11 +5,10 @@ import { getLeaderboard, type GameMode, type LeaderboardRow } from "../../lib/ru
 export default function LeaderboardPage() {
   const [mode, setMode] = useState<GameMode>("roguelike");
   const [rows, setRows] = useState<LeaderboardRow[]>([]);
-  const [message, setMessage] = useState("");
+  const [message, setMessage] = useState("Loading…");
 
   useEffect(() => {
     let active = true;
-    setMessage("Loading…");
     getLeaderboard(mode).then(({ rows, error }) => {
       if (!active) return;
       setMessage(error ?? "");

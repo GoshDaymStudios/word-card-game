@@ -47,7 +47,7 @@ export function submitGuess(state: DailyState, guess: string): DailyState {
 }
 
 // One-time power-up: reveal one not-yet-solved answer position as a free hint.
-export function usePowerUp(state: DailyState): DailyState {
+export function applyPowerUp(state: DailyState): DailyState {
   if (state.powerUpUsed || state.status !== "playing") return state;
 
   // Positions the player hasn't already pinned as "correct".

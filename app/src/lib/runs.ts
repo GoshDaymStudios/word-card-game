@@ -55,6 +55,31 @@ export async function saveRun(
   return { id: data?.id ?? null, error: error?.message ?? null };
 }
 
+export type MyRun = {
+  id: number;
+  mode: GameMode;
+  score: number;
+  is_shared: boolean;
+  created_at: string;
+};
+
+// The logged-in user's own runs, newest first.
+export async function getMyRuns(): Promise<{ rows: MyRun[]; error: string | null }> {
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user) return { rows: [], error: "You must be logged in." };
+
+  const { data, error } = await supabase
+    .from("runs")
+    .select("id, mode, score, is_shared, created_at")
+    .eq("user_id", user.id)
+    .order("created_at", { ascending: false });
+
+  if (error) return { rows: [], error: error.message };
+  return { rows: (data ?? []) as MyRun[], error: null };
+}
+
 // Top scores for one mode.
 export async function getLeaderboard(
   mode: GameMode,

@@ -35,11 +35,11 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
+      - name: Lint
+        run: npm run lint
+
       - name: Run tests
         run: npm test
 
       - name: Build app
         run: npm run build
-
-      # NOTE: `npm run lint` is intentionally not in CI yet — there are pre-existing
-      # lint errors in RunsPage.tsx (see docs/game-design.md TODO). Add it here once cleared.

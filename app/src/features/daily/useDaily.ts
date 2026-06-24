@@ -3,7 +3,7 @@ import { getWordForDate, dateKey, getStreak, recordResult, type StreakInfo } fro
 import {
   createDailyGame,
   submitGuess,
-  usePowerUp,
+  applyPowerUp,
   toEmojiGrid,
   dailyScore,
   type DailyState,
@@ -29,7 +29,7 @@ export function useDaily() {
   }
 
   function reveal() {
-    setState((current) => usePowerUp(current));
+    setState((current) => applyPowerUp(current));
   }
 
   function shareText(): string {
