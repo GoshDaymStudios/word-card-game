@@ -134,15 +134,22 @@ export function submitGuess(state: RunState, guess: string): RunState {
     };
   }
 
-  // Missed the target — lose a life, retry the same ante (or end the run).
+  // Missed the target — lose a life. End the run on the last life, otherwise pause
+  // on a "round-failed" screen so the player sees what happened (continueAfterFailure
+  // starts the next attempt).
   const lives = state.lives - 1;
   if (lives <= 0) {
     return { ...state, round: finishedRound, lives: 0, status: "lost" };
   }
+  return { ...state, round: finishedRound, lives, status: "round-failed" };
+}
+
+// After a "round-failed" pause, start the next attempt at the same ante.
+export function continueAfterFailure(state: RunState): RunState {
+  if (state.status !== "round-failed") return state;
   const roundNumber = state.roundNumber + 1;
   return {
     ...state,
-    lives,
     roundNumber,
     round: beginRound(state.seed, roundNumber, state.modifiers),
     status: "playing",

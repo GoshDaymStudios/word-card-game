@@ -3,6 +3,7 @@ import {
   createRun,
   submitGuess,
   chooseModifier,
+  continueAfterFailure,
   targetForAnte,
   FINAL_ANTE,
   STARTING_LIVES,
@@ -66,13 +67,20 @@ describe("submitGuess", () => {
     expect(won.status).toBe("won");
   });
 
-  it("loses a life on a failed round and ends the run at zero lives", () => {
+  it("pauses on round-failed when a life is left, and ends the run at zero lives", () => {
     let run = createRun(3);
     for (let life = STARTING_LIVES; life > 0; life--) {
       // Exhaust the round with wrong-but-valid guesses (never the answer).
       const filler = run.round.answer === "xxxxx" ? "yyyyy" : "xxxxx";
       for (let i = 0; i < run.round.attemptsAllowed; i++) {
         run = submitGuess(run, filler);
+      }
+      expect(run.lives).toBe(life - 1);
+      if (life > 1) {
+        // Lives remain: pause on the round-failed screen, then continue.
+        expect(run.status).toBe("round-failed");
+        run = continueAfterFailure(run);
+        expect(run.status).toBe("playing");
       }
     }
     expect(run.lives).toBe(0);
