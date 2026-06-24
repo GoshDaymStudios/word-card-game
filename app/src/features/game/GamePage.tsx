@@ -15,17 +15,16 @@ export default function GamePage() {
   const [message, setMessage] = useState("");
   const [savedId, setSavedId] = useState<number | null>(null);
 
-  // Background music while on the roguelike page.
-  useEffect(() => {
-    ensureMusic("roguelike");
-    return () => stopMusic();
-  }, []);
-
-  // Win / lose sting.
+  // Music while playing; on game over play the sting and cut the music so it lands.
   useEffect(() => {
     if (run.status === "won") playSfx("win");
     else if (run.status === "lost") playSfx("lose");
+    if (run.status === "won" || run.status === "lost") stopMusic();
+    else ensureMusic("roguelike");
   }, [run.status]);
+
+  // Stop music when leaving the page.
+  useEffect(() => () => stopMusic(), []);
 
   const { round } = run;
   const len = 5;

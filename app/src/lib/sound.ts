@@ -20,11 +20,24 @@ const musicFiles = import.meta.glob("../assets/music/*.{mp3,ogg,wav,m4a}", {
   import: "default",
 }) as UrlMap;
 
+// Multiple selectable flip sounds (drop ~any number of clips here).
+const flipFiles = import.meta.glob("../assets/flips/*.{mp3,ogg,wav,m4a}", {
+  eager: true,
+  query: "?url",
+  import: "default",
+}) as UrlMap;
+
 function urlFor(files: UrlMap, key: string): string | null {
   for (const [path, url] of Object.entries(files)) {
     if (path.split("/").pop()!.replace(/\.[^.]+$/, "") === key) return url;
   }
   return null;
+}
+
+function basenames(files: UrlMap): { key: string; url: string }[] {
+  return Object.entries(files)
+    .map(([p, url]) => ({ key: p.split("/").pop()!.replace(/\.[^.]+$/, ""), url }))
+    .sort((a, b) => a.key.localeCompare(b.key));
 }
 
 // ---- Mute (persisted) ------------------------------------------------------
@@ -90,12 +103,57 @@ export function playSfx(name: string, opts: SfxOpts = {}): void {
   void a.play().catch(() => {});
 }
 
-// Play the flip sfx once per letter, staggered to match the tile flip animation,
-// with a slight pitch rise across the row (Balatro-style cascade).
+// ---- Flip-sound selection --------------------------------------------------
+// "daily" = one random clip fixed per day · "shuffle" = random each guess · "<key>" = that clip.
+let flipSetting =
+  (typeof localStorage !== "undefined" && localStorage.getItem("flipSound")) || "daily";
+
+export function listFlipSounds(): string[] {
+  return basenames(flipFiles).map((f) => f.key);
+}
+export function getFlipSetting(): string {
+  return flipSetting;
+}
+export function setFlipSetting(value: string): void {
+  flipSetting = value;
+  if (typeof localStorage !== "undefined") localStorage.setItem("flipSound", value);
+}
+
+function dayNumber(): number {
+  const d = new Date();
+  return Math.floor(new Date(d.getFullYear(), d.getMonth(), d.getDate()).getTime() / 86_400_000);
+}
+
+// Resolve which flip clip to use for a row. null = no files yet (caller falls back).
+function resolveFlipUrl(): string | null {
+  const list = basenames(flipFiles);
+  if (list.length === 0) return null;
+  if (flipSetting === "shuffle") return list[Math.floor(Math.random() * list.length)].url;
+  if (flipSetting === "daily") return list[dayNumber() % list.length].url;
+  const hit = list.find((f) => f.key === flipSetting);
+  return hit ? hit.url : list[dayNumber() % list.length].url;
+}
+
+function playUrl(url: string, volume: number, rate: number): void {
+  const a = new Audio(url);
+  a.volume = volume;
+  a.playbackRate = rate;
+  void a.play().catch(() => {});
+}
+
+// Play the flip sound once per letter, staggered to match the tile flip, pitched up across
+// the row (Balatro-style cascade). One clip is chosen for the whole row (see flip setting);
+// falls back to assets/sfx/flip.* and then a synth tick when no flip clips exist.
 export function playFlipRow(count = 5, staggerMs = 90): void {
+  if (muted) return;
+  const url = resolveFlipUrl();
   for (let i = 0; i < count; i++) {
     const rate = 1 + i * 0.06;
-    window.setTimeout(() => playSfx("flip", { volume: 0.35, rate }), i * staggerMs);
+    window.setTimeout(() => {
+      if (muted) return;
+      if (url) playUrl(url, 0.35, rate);
+      else playSfx("flip", { volume: 0.35, rate });
+    }, i * staggerMs);
   }
 }
 

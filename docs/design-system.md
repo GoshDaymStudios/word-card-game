@@ -95,7 +95,15 @@ Same "drop a file in a folder" idea. Loader: `app/src/lib/sound.ts`.
 app/src/assets/
   sfx/     <name>.mp3    one-shots:  click, win, lose, …
   music/   <name>.mp3    loops:      roguelike, …
+  flips/   <name>.mp3    selectable flip clips (drop ~any number)
 ```
+
+**Game over:** losing a roguelike run plays `sfx/lose.*` and cuts the music — drop your
+game-over clip in as `assets/sfx/lose.mp3`.
+
+**Flip sound picker** (in the nav): choose how the flip clips in `assets/flips/` are used —
+**Daily** (one random clip fixed per day), **Shuffle** (random each guess), or a specific
+clip. Persisted in localStorage; one chosen clip plays per row, pitched up across the letters.
 
 - `playSfx("name")` — one-shot. Missing file = no-op, **except `click`** which falls back to
   a built-in synth blip, so buttons make a sound out of the box.
