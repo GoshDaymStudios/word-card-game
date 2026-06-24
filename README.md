@@ -125,6 +125,44 @@ Do not commit secrets or local `.env` files.
 
 > **Note:** If you don’t have access to the shared project, create your own and follow the setup guide in `/docs`.
 
+> Database schema + RLS: run `infra/supabase/schema.sql` in the Supabase SQL Editor
+> (idempotent — safe on an existing DB). Details in `docs/supabase.md`.
+
+---
+
+## Health & Monitoring
+
+The app container serves a health endpoint:
+
+```
+GET /health  ->  200 "ok"
+```
+
+Monitoring is intentionally two layers:
+
+- **UptimeRobot (external — the real check).** A free HTTP monitor hits
+  `https://<domain>/health` from outside the server. Because it runs off-box, it catches
+  the case that matters most: the whole VPS being down. **This is the alert we rely on.**
+
+- **Uptime Kuma (self-hosted — dashboard / demo).** Runs as a container on the same VPS
+  (`uptime-kuma` service in `docker-compose.yml`). Nice dashboard and history, but it lives
+  on the same machine as the app, so it shares the same **failure domain** — if the server
+  dies, Kuma dies with it and can't alert. So Kuma is for the dashboard and as a DevOps
+  demonstration, **not** the safety net. To be a true external monitor it would need to run
+  on a separate host (e.g. a free-tier VM elsewhere).
+
+Kuma listens on `127.0.0.1:3001` (not exposed publicly). Reach it for first-time setup via
+an SSH tunnel:
+
+```
+ssh -L 3001:localhost:3001 <user>@<vps>
+# then open http://localhost:3001
+```
+
+…or proxy a subdomain to it from the host Nginx (see `infra/nginx/example.conf`).
+
+---
+
 ## Git Workflow
 
 We use a simple feature branch workflow.
@@ -195,20 +233,26 @@ git pull origin main
 
 ## Current Status
 
-- Project structure in place
-- Frontend under development
-- Supabase integration started
-- Docker setup working locally
+- Two games in one app, sharing a word engine (`app/src/lib/words`):
+  - **Daily** (`/daily`) — Wordle-style, date-seeded word, streak, emoji share.
+  - **Roguelike** (`/game`) — Balatro-style run: antes, target scores, stacking modifiers.
+- Auth, run saving, two leaderboards (per mode), and public run sharing (`/share/:id`).
+- Vitest suite (engine + scoring + word logic); CI runs lint + tests + build.
+- Dockerised (multi-stage Nginx) with SPA fallback + `/health`; deploy to Hetzner via CI/CD.
+
+See `docs/game-design.md` for the living status/plan.
 
 ---
 
 ## Roadmap
 
-- Core gameplay loop
-- Save runs to database
-- Leaderboard
-- Sharing runs
-- Deploy to VPS
+- [x] Core gameplay loop (both modes)
+- [x] Save runs to database
+- [x] Leaderboard (per mode)
+- [x] Sharing runs
+- [x] Deploy to VPS (Docker + Nginx + CI/CD)
+- [ ] Polish / juice: animation, sound, "round failed" screen, balance pass
+- [ ] Monitoring: UptimeRobot (external) + Uptime Kuma (dashboard)
 
 ---
 

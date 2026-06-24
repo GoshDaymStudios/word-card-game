@@ -1,13 +1,38 @@
+# services:
+#   web:
+#     build:
+#       context: ./app
+#       dockerfile: Dockerfile
+#     ports:
+#       - "5173:5173"
+#     env_file:
+#       - ./app/.env
+#     volumes:
+#       - ./app:/app
+#       - /app/node_modules
+#     command: npm run dev -- --host 0.0.0.0
 services:
   web:
     build:
       context: ./app
       dockerfile: Dockerfile
     ports:
-      - "5173:5173"
-    env_file:
-      - ./app/.env
+      - "5173:80"
+    restart: unless-stopped
+
+  # Self-hosted monitoring dashboard. NOTE: runs on the same host as the app, so
+  # it shares the same failure domain — it's for the dashboard / as a DevOps demo,
+  # NOT the real safety net. The real external check is UptimeRobot hitting /health
+  # from off-box (see README "Health & Monitoring").
+  # Bound to localhost only; reach it via SSH tunnel or a host-Nginx subdomain proxy.
+  uptime-kuma:
+    image: louislam/uptime-kuma:1
+    container_name: uptime-kuma
+    ports:
+      - "127.0.0.1:3001:3001"
     volumes:
-      - ./app:/app
-      - /app/node_modules
-    command: npm run dev -- --host 0.0.0.0
+      - uptime-kuma-data:/app/data
+    restart: unless-stopped
+
+volumes:
+  uptime-kuma-data:
