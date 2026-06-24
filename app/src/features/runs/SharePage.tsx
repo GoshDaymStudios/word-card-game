@@ -25,11 +25,7 @@ export default function SharePage() {
 
   return (
     <main style={{ padding: "2rem", maxWidth: 520, margin: "0 auto", textAlign: "center" }}>
-      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-        <Link to="/">← Home</Link>
-        <h1 style={{ margin: 0 }}>Shared run</h1>
-        <span />
-      </div>
+      <h1 style={{ margin: 0, textAlign: "center" }}>Shared run</h1>
 
       {!run ? (
         <p style={{ marginTop: "2rem" }}>{!validId ? "Invalid run id." : message}</p>

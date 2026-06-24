@@ -71,7 +71,6 @@ export default function DailyPage() {
   return (
     <main style={{ padding: "2rem", maxWidth: 460, margin: "0 auto", textAlign: "center" }}>
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-        <Link to="/">← Home</Link>
         <h1 style={{ margin: 0 }}>Daily</h1>
         <span>🔥 {streak.streak}</span>
       </div>

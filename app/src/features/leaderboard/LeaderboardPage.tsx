@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
 import { getLeaderboard, type GameMode, type LeaderboardRow } from "../../lib/runs";
 
 export default function LeaderboardPage() {
@@ -33,11 +32,7 @@ export default function LeaderboardPage() {
 
   return (
     <main style={{ padding: "2rem", maxWidth: 700, margin: "0 auto" }}>
-      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-        <Link to="/">← Home</Link>
-        <h1 style={{ margin: 0 }}>Leaderboard</h1>
-        <span />
-      </div>
+      <h1 style={{ margin: 0, textAlign: "center" }}>Leaderboard</h1>
 
       <div style={{ display: "flex", gap: "1rem", justifyContent: "center", margin: "1rem 0" }}>
         {tab("roguelike", "Roguelike")}

@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
 import { useGame } from "./useGame";
 import { FINAL_ANTE } from "./gameEngine";
 import { getModifier } from "./modifiers";
@@ -86,7 +85,6 @@ export default function GamePage() {
   return (
     <main style={{ padding: "1.5rem", maxWidth: 460, margin: "0 auto", textAlign: "center" }}>
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-        <Link to="/">← Home</Link>
         <h1 style={{ margin: 0 }}>Run</h1>
         <span>❤️ {run.lives}</span>
       </div>

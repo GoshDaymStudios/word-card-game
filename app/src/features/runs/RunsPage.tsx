@@ -21,11 +21,7 @@ export default function RunsPage() {
 
   return (
     <main style={{ padding: "2rem", maxWidth: 700, margin: "0 auto" }}>
-      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-        <Link to="/">← Home</Link>
-        <h1 style={{ margin: 0 }}>My runs</h1>
-        <span />
-      </div>
+      <h1 style={{ margin: 0, textAlign: "center" }}>My runs</h1>
 
       {message && <p style={{ textAlign: "center" }}>{message}</p>}
 
