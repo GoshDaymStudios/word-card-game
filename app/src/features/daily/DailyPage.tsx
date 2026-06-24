@@ -19,6 +19,15 @@ export default function DailyPage() {
     playSfx("Goshdaymstudios-original", { volume: 0.7 });
   }, []);
 
+  // Win / lose sting, after the flip cascade of the final guess.
+  useEffect(() => {
+    if (state.status === "won" || state.status === "lost") {
+      const sting = state.status === "won" ? "win" : "lose";
+      const t = window.setTimeout(() => playSfx(sting, { volume: 0.7 }), 750);
+      return () => clearTimeout(t);
+    }
+  }, [state.status]);
+
   function handleSubmit() {
     if (done) return;
     if (input.length !== len) {

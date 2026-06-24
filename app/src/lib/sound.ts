@@ -106,7 +106,7 @@ export function playSfx(name: string, opts: SfxOpts = {}): void {
 // ---- Flip-sound selection --------------------------------------------------
 // "daily" = one random clip fixed per day · "shuffle" = random each guess · "<key>" = that clip.
 let flipSetting =
-  (typeof localStorage !== "undefined" && localStorage.getItem("flipSound")) || "daily";
+  (typeof localStorage !== "undefined" && localStorage.getItem("flipSound")) || "shuffle";
 
 export function listFlipSounds(): string[] {
   return basenames(flipFiles).map((f) => f.key);

@@ -98,12 +98,15 @@ app/src/assets/
   flips/   <name>.mp3    selectable flip clips (drop ~any number)
 ```
 
-**Game over:** losing a roguelike run plays `sfx/lose.*` and cuts the music — drop your
-game-over clip in as `assets/sfx/lose.mp3`.
+**Intro:** entering Daily or Roguelike plays `sfx/Goshdaymstudios-original.*`.
+
+**Game over:** losing (Daily or Roguelike) plays `sfx/lose.*` ~750ms after the final guess
+(so it lands after the flip cascade); roguelike also cuts the music.
 
 **Flip sound picker** (in the nav): choose how the flip clips in `assets/flips/` are used —
-**Daily** (one random clip fixed per day), **Shuffle** (random each guess), or a specific
-clip. Persisted in localStorage; one chosen clip plays per row, pitched up across the letters.
+**Daily** (one random clip fixed per day), **Shuffle** (random each guess, **default**), or a
+specific clip. Persisted in localStorage; one chosen clip plays per row, pitched up across
+the letters. ~21 flip clips currently in `assets/flips/`.
 
 - `playSfx("name")` — one-shot. Missing file = no-op, **except `click`** which falls back to
   a built-in synth blip, so buttons make a sound out of the box.

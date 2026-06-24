@@ -16,8 +16,22 @@ incident is resolved (see below).
 2. 🟡 Uptime Kuma — container deployed/running; first-run setup (admin + `/health` monitor
    via SSH tunnel to `127.0.0.1:3001`) **not done yet**.
 
-**Next build phase: Phase 6 (juice/polish)** — round-failed screen, animation/sound,
-balance pass, "one daily save per day" guard. Plus the two preventives (fail-loud, smoke-test).
+**Phase 6 (juice/polish) — DONE, in PR #5 `feat/ui-polish` (ready to merge):**
+- Round-failed screen; shared `Tile` with 3D-perspective flip + staggered cascade.
+- Balatro-inspired dark theme with **3 live-switchable palettes** (Twilight/Ember/Deep Sea,
+  CSS-variable driven), Lilita One display font, global nav + Beta badge, hero landing.
+- **Art pipeline** (`assets/{modifiers,tiles,backgrounds,icons,brand}` + `lib/art.ts`,
+  drop-in by filename) + placeholder modifier "joker" cards.
+- **Sound pipeline** (`assets/{sfx,music,flips}` + `lib/sound.ts`): click sfx (synth
+  fallback), flip cascade (one clip/letter, pitched up; **flip-sound picker**:
+  Daily/Shuffle/specific, default **Shuffle**), `roguelike` music, intro sting on entering
+  each game, win/lose stings (Daily + Roguelike) after the flip cascade; game over cuts the
+  music. Mute toggle. ~21 flip clips + intro + lose committed.
+See `docs/design-system.md` for the full visual/audio plan.
+
+**After PR #5 merges → app is a polished early-access BETA.** Remaining (optional, later):
+Uptime Kuma first-run, the two preventives (fail-loud, deploy smoke-test), balance pass,
+"one daily save per day" guard, win.mp3 + click.mp3 + music if desired, real art/icons.
 
 ### Incident: blank production page (build-time env)
 Prod used to run the **Vite dev server in the container** with `env_file: app/.env`
@@ -42,8 +56,8 @@ Then: **Phase 6 (juice/polish)** is the main remaining build work.
 | 3 | DevOps: `/health`, nginx conf, CI lint+test, RLS, monitoring | 🟡 done: container nginx (SPA fallback + `/health`), host proxy example, CI lint+test+build, RLS live, Uptime Kuma in docker-compose + README "Health & Monitoring". Left: deploy-verify `/health`, set up UptimeRobot (external) |
 | 4 | Wire completed runs → Supabase, both modes | ✅ done — both save via `lib/runs.ts`. Daily **verified live**; roguelike save pending manual check |
 | 5 | Two leaderboards (filter `mode`) + share page `/share/:id` | ✅ done — mode-tabbed `LeaderboardPage` (daily verified live), `SharePage`, GamePage share button (pending manual check) |
-| 6 | Juice/polish (animation, sound) | ⬜ not started |
-| 7 | Docs + README refresh | 🟡 ongoing |
+| 6 | Juice/polish (animation, sound, theme, art/sound pipelines) | ✅ done in PR #5 (see Resume-here) — verified in browser |
+| 7 | Docs + README refresh | 🟡 ongoing (design-system.md added; README updated) |
 
 **Open follow-ups / known gaps (running TODO)**
 - [ ] **MANUAL: verify roguelike chain live** — play `/game` → Save → Leaderboard
