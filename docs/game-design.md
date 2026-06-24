@@ -11,9 +11,10 @@ Master design doc. Vision, architecture, both game modes, DB schema, and the pha
 leaderboards, share. PRs #1 (MVP) and #2 (prod env fix) merged & deployed. The blank-page
 incident is resolved (see below).
 
-**In progress: monitoring** — follow `docs/monitoring.md`:
-1. UptimeRobot HTTP monitor on `https://birkelandboss.no/health` (external = real alert).
-2. Uptime Kuma first-run via SSH tunnel to `127.0.0.1:3001` (dashboard/demo).
+**Monitoring** (`docs/monitoring.md`):
+1. ✅ UptimeRobot HTTP monitor on `https://birkelandboss.no/health` (external = real alert).
+2. 🟡 Uptime Kuma — container deployed/running; first-run setup (admin + `/health` monitor
+   via SSH tunnel to `127.0.0.1:3001`) **not done yet**.
 
 **Next build phase: Phase 6 (juice/polish)** — round-failed screen, animation/sound,
 balance pass, "one daily save per day" guard. Plus the two preventives (fail-loud, smoke-test).
