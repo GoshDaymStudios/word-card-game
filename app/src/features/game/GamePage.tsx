@@ -4,6 +4,7 @@ import { FINAL_ANTE } from "./gameEngine";
 import { getModifier } from "./modifiers";
 import { saveRun, shareRun } from "../../lib/runs";
 import { Tile } from "../../components/Tile";
+import { ModifierCard } from "../../components/ModifierCard";
 
 const CELL = 46;
 
@@ -109,18 +110,13 @@ export default function GamePage() {
         </span>
       </div>
 
-      {/* Held modifiers */}
+      {/* Held modifiers — Balatro-style joker row (art when present, else fallback) */}
       {run.modifiers.length > 0 && (
-        <div style={{ display: "flex", gap: 6, flexWrap: "wrap", justifyContent: "center", marginBottom: "1rem" }}>
-          {run.modifiers.map((id) => (
-            <span
-              key={id}
-              title={getModifier(id).description}
-              style={{ background: "#eee", borderRadius: 12, padding: "2px 10px", fontSize: "0.8rem" }}
-            >
-              {getModifier(id).name}
-            </span>
-          ))}
+        <div style={{ display: "flex", gap: 8, flexWrap: "wrap", justifyContent: "center", marginBottom: "1rem" }}>
+          {run.modifiers.map((id) => {
+            const m = getModifier(id);
+            return <ModifierCard key={id} id={id} name={m.name} description={m.description} />;
+          })}
         </div>
       )}
 
