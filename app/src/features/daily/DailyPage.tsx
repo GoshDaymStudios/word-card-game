@@ -2,38 +2,7 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import { useDaily } from "./useDaily";
 import { saveRun } from "../../lib/runs";
-import type { LetterResult } from "../../lib/words";
-
-const COLORS: Record<LetterResult, string> = {
-  correct: "#6aaa64",
-  present: "#c9b458",
-  absent: "#787c7e",
-};
-
-const CELL = 52;
-
-function Cell({ letter, result }: { letter: string; result?: LetterResult }) {
-  const filled = result !== undefined;
-  return (
-    <div
-      style={{
-        width: CELL,
-        height: CELL,
-        display: "grid",
-        placeItems: "center",
-        fontSize: "1.6rem",
-        fontWeight: 700,
-        textTransform: "uppercase",
-        color: filled ? "#fff" : "#1a1a1b",
-        background: filled ? COLORS[result] : "transparent",
-        border: `2px solid ${filled ? COLORS[result] : "#d3d6da"}`,
-        borderRadius: 4,
-      }}
-    >
-      {letter}
-    </div>
-  );
-}
+import { Tile } from "../../components/Tile";
 
 export default function DailyPage() {
   const { state, streak, guess, reveal, shareText, score, dateKey } = useDaily();
@@ -85,11 +54,11 @@ export default function DailyPage() {
     const cells = [];
     for (let c = 0; c < len; c++) {
       if (submitted) {
-        cells.push(<Cell key={c} letter={state.guesses[r][c]} result={submitted[c]} />);
+        cells.push(<Tile key={c} index={c} letter={state.guesses[r][c]} result={submitted[c]} />);
       } else if (isCurrent) {
-        cells.push(<Cell key={c} letter={input[c] ?? ""} />);
+        cells.push(<Tile key={c} letter={input[c] ?? ""} />);
       } else {
-        cells.push(<Cell key={c} letter="" />);
+        cells.push(<Tile key={c} letter="" />);
       }
     }
     rows.push(
