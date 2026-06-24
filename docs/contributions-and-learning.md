@@ -146,7 +146,34 @@ code, and I understand how every part works — here's how."*
 
 ---
 
-## 4. Honesty note (for portfolio / interviews)
+## 4. Incident & lesson — the blank production page (good interview story)
+
+**What happened.** After deploying, `birkelandboss.no` rendered a blank page while
+`localhost` worked fine.
+
+**Root cause.** Production originally ran the **Vite dev server inside the container**
+(`command: npm run dev`, `env_file: app/.env`) — env was read at *runtime*, so it worked.
+The Docker setup was rewritten to a proper **static build served by nginx**, which needs
+`VITE_*` env at *build* time. That wiring was missed, so the built bundle had no Supabase
+URL/key, `supabase.ts` threw on load, and React never mounted → blank.
+
+**Why nothing caught it.** CI was green because it only runs `npm run build`, which succeeds
+without env (the failure is a *runtime* throw in the browser). The container also started
+fine. Nobody opened the deployed URL after the change.
+
+**Fix.** Pass the values as Docker **build args** from a root `.env` next to
+`docker-compose.yml` (the anon key is public, so baking it into the static build is fine).
+
+**Lessons (worth saying out loud):**
+- Know the difference between **build-time** and **runtime** config. SPAs bake env at build.
+- "It builds" ≠ "it works." **Verify in the environment it runs in** — open the deployed URL.
+- **Fail loud, not blank** — a missing-config error on screen beats a white page.
+- When migrating how something runs, ask *"what did the old setup provide that the new one
+  must also provide?"* (here: env via `env_file`).
+
+---
+
+## 5. Honesty note (for portfolio / interviews)
 
 Lean into what's true and strong: you own the **architecture, the DevOps pipeline, and the
 understanding of the whole system**, and you used AI as a force-multiplier for implementation

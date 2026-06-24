@@ -16,6 +16,11 @@ services:
     build:
       context: ./app
       dockerfile: Dockerfile
+      # Passed into the build so Vite can inline them (read from the .env file
+      # sitting next to this docker-compose.yml). See README "Deployment".
+      args:
+        VITE_SUPABASE_URL: ${VITE_SUPABASE_URL}
+        VITE_SUPABASE_PUBLISHABLE_KEY: ${VITE_SUPABASE_PUBLISHABLE_KEY}
     ports:
       - "5173:80"
     restart: unless-stopped

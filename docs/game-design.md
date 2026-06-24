@@ -7,21 +7,26 @@ Master design doc. Vision, architecture, both game modes, DB schema, and the pha
 
 ## ▶ Resume here (next action) — updated 2026-06-24
 
-DB is live (schema.sql ran: `mode` column + RLS confirmed). **Daily save → leaderboard is
-verified live in the browser** (screenshot: two daily scores ranked). Code is lint/test/
-build clean and committed on `feature/two-games-mvp`.
+PR #1 merged & deployed. DB live, both games verified live (daily + roguelike save →
+leaderboard → share, in browser). Then prod went **blank** — see the incident below.
 
-Remaining MANUAL checks (need a real browser / server — Claude's sandbox can't reach
-Supabase and has no Docker):
-1. **Roguelike chain:** play `/game` → Save → Leaderboard "Roguelike" shows it → click
-   Share → open `/share/:id`. (Daily is already verified; roguelike + share are not.)
-2. **Container `/health` + deep links:** after deploying the new image, hit
-   `https://<domain>/health` (expect `ok`) and refresh a deep link like `/leaderboard`
-   (must NOT 404 — the new nginx.conf SPA fallback fixes that).
-3. **UptimeRobot** monitor pointing at `/health`.
-4. **Push branch + open PR** (outward-facing — confirm first).
+**Current blocker — fix the blank prod page (PR #2 `fix/prod-supabase-env`):**
+1. On the VPS, create the **root** `.env` (next to `docker-compose.yml`, NOT `app/.env`)
+   with `VITE_SUPABASE_URL` + `VITE_SUPABASE_PUBLISHABLE_KEY`.
+2. Merge PR #2 → deploy.
+3. Verify `https://birkelandboss.no/health` → `ok`, and the site renders (not blank),
+   and a deep-link refresh (`/leaderboard`) does not 404.
 
-After those: **Phase 6 (juice/polish)** is the main remaining build work.
+### Incident: blank production page (build-time env)
+Prod used to run the **Vite dev server in the container** with `env_file: app/.env`
+(env read at runtime → worked). The Docker rewrite to a **static nginx build** needs env at
+**build time**, but that wiring was missed — so the bundle had no Supabase values,
+`supabase.ts` threw on load, and the page went blank. CI stayed green (it only runs
+`npm run build`, which succeeds without env; the throw is runtime). Fix: pass env as Docker
+**build args** from a root `.env` (PR #2). Lessons captured in
+`contributions-and-learning.md`.
+
+Then: **Phase 6 (juice/polish)** is the main remaining build work.
 
 ## Status (living) — updated 2026-06-24
 
@@ -43,6 +48,11 @@ After those: **Phase 6 (juice/polish)** is the main remaining build work.
       "Roguelike" → Share → `/share/:id`. (Daily is verified; roguelike + share are not.)
 - [ ] **MANUAL: deploy + verify `/health` and deep-link refresh** don't 404 (new nginx.conf).
       Claude's sandbox has no Docker, so this is a deploy-time check.
+- [ ] **Fail loud, not blank** — `supabase.ts` throws on missing env → blank screen. Make it
+      render a visible "missing config" message instead (so a misconfigured deploy is a
+      5-second diagnosis, not a mystery). [from the blank-prod-page incident]
+- [ ] **Deploy smoke-test checklist** — after each deploy: open the URL, check console,
+      click one deep link, `curl /health`. Optionally have CI build the Docker image + curl it.
 - [ ] **MANUAL: UptimeRobot** monitor on `/health` (external = the real check). Uptime Kuma
       is already wired in docker-compose as the same-host dashboard/demo (see README).
 - [ ] **MANUAL: Uptime Kuma first-run setup** after deploy (SSH tunnel to `127.0.0.1:3001`,

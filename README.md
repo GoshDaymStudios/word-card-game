@@ -130,6 +130,27 @@ Do not commit secrets or local `.env` files.
 
 ---
 
+## Deployment (production)
+
+CI/CD: pushing to `main` triggers a GitHub Action that SSHes into the VPS and runs
+`git pull` + `docker compose up -d --build`.
+
+**Important — build-time env vars.** Vite inlines `VITE_*` variables at *build* time, and
+the Docker build does not include `.env` (it's gitignored / dockerignored). So the values
+are passed as **build args** from a `.env` file sitting next to `docker-compose.yml` on the
+server. Without it the app builds fine but shows a **blank page** (the Supabase client throws
+on load). Create it once on the server:
+
+```
+# /home/<user>/apps/word-card-game/.env  (NOT committed; the anon key is public-safe)
+VITE_SUPABASE_URL=https://<your-project>.supabase.co
+VITE_SUPABASE_PUBLISHABLE_KEY=sb_publishable_xxx
+```
+
+Then `docker compose up -d --build` rebuilds with the values baked in.
+
+---
+
 ## Health & Monitoring
 
 The app container serves a health endpoint:
