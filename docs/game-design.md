@@ -7,15 +7,17 @@ Master design doc. Vision, architecture, both game modes, DB schema, and the pha
 
 ## ▶ Resume here (next action) — updated 2026-06-24
 
-PR #1 merged & deployed. DB live, both games verified live (daily + roguelike save →
-leaderboard → share, in browser). Then prod went **blank** — see the incident below.
+**MVP is LIVE and verified in prod** at birkelandboss.no: both games, auth, save, two
+leaderboards, share. PRs #1 (MVP) and #2 (prod env fix) merged & deployed. The blank-page
+incident is resolved (see below).
 
-**Current blocker — fix the blank prod page (PR #2 `fix/prod-supabase-env`):**
-1. On the VPS, create the **root** `.env` (next to `docker-compose.yml`, NOT `app/.env`)
-   with `VITE_SUPABASE_URL` + `VITE_SUPABASE_PUBLISHABLE_KEY`.
-2. Merge PR #2 → deploy.
-3. Verify `https://birkelandboss.no/health` → `ok`, and the site renders (not blank),
-   and a deep-link refresh (`/leaderboard`) does not 404.
+**Monitoring** (`docs/monitoring.md`):
+1. ✅ UptimeRobot HTTP monitor on `https://birkelandboss.no/health` (external = real alert).
+2. 🟡 Uptime Kuma — container deployed/running; first-run setup (admin + `/health` monitor
+   via SSH tunnel to `127.0.0.1:3001`) **not done yet**.
+
+**Next build phase: Phase 6 (juice/polish)** — round-failed screen, animation/sound,
+balance pass, "one daily save per day" guard. Plus the two preventives (fail-loud, smoke-test).
 
 ### Incident: blank production page (build-time env)
 Prod used to run the **Vite dev server in the container** with `env_file: app/.env`
