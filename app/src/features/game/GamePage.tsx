@@ -4,37 +4,9 @@ import { useGame } from "./useGame";
 import { FINAL_ANTE } from "./gameEngine";
 import { getModifier } from "./modifiers";
 import { saveRun, shareRun } from "../../lib/runs";
-import type { LetterResult } from "../../lib/words";
+import { Tile } from "../../components/Tile";
 
-const COLORS: Record<LetterResult, string> = {
-  correct: "#6aaa64",
-  present: "#c9b458",
-  absent: "#787c7e",
-};
 const CELL = 46;
-
-function Cell({ letter, result }: { letter: string; result?: LetterResult }) {
-  const filled = result !== undefined;
-  return (
-    <div
-      style={{
-        width: CELL,
-        height: CELL,
-        display: "grid",
-        placeItems: "center",
-        fontSize: "1.4rem",
-        fontWeight: 700,
-        textTransform: "uppercase",
-        color: filled ? "#fff" : "#1a1a1b",
-        background: filled ? COLORS[result] : "transparent",
-        border: `2px solid ${filled ? COLORS[result] : "#d3d6da"}`,
-        borderRadius: 4,
-      }}
-    >
-      {letter}
-    </div>
-  );
-}
 
 export default function GamePage() {
   const { run, startNewGame, playGuess, pickModifier, continueRound } = useGame();
@@ -100,9 +72,9 @@ export default function GamePage() {
     const isCurrent = !submitted && r === round.guesses.length && run.status === "playing";
     const cells = [];
     for (let c = 0; c < len; c++) {
-      if (submitted) cells.push(<Cell key={c} letter={round.guesses[r][c]} result={submitted[c]} />);
-      else if (isCurrent) cells.push(<Cell key={c} letter={input[c] ?? ""} />);
-      else cells.push(<Cell key={c} letter="" />);
+      if (submitted) cells.push(<Tile key={c} index={c} size={CELL} letter={round.guesses[r][c]} result={submitted[c]} />);
+      else if (isCurrent) cells.push(<Tile key={c} size={CELL} letter={input[c] ?? ""} />);
+      else cells.push(<Tile key={c} size={CELL} letter="" />);
     }
     rows.push(
       <div key={r} style={{ display: "flex", gap: 6 }}>
