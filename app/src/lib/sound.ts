@@ -144,7 +144,7 @@ function playUrl(url: string, volume: number, rate: number): void {
 // Play the flip sound once per letter, staggered to match the tile flip, pitched up across
 // the row (Balatro-style cascade). One clip is chosen for the whole row (see flip setting);
 // falls back to assets/sfx/flip.* and then a synth tick when no flip clips exist.
-export function playFlipRow(count = 5, staggerMs = 90): void {
+export function playFlipRow(count = 5, staggerMs = 125): void {
   if (muted) return;
   const url = resolveFlipUrl();
   for (let i = 0; i < count; i++) {
