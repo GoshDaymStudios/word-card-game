@@ -1,5 +1,6 @@
 import { Link, NavLink } from "react-router-dom";
 import { ThemeToggle } from "./ThemeToggle";
+import { SoundToggle } from "./SoundToggle";
 import "./NavBar.css";
 
 const LINKS = [
@@ -27,6 +28,7 @@ export function NavBar() {
           </NavLink>
         ))}
         <ThemeToggle />
+        <SoundToggle />
       </nav>
     </header>
   );

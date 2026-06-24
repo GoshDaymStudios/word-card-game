@@ -14,7 +14,10 @@
 .tile.revealed {
   color: #fff;
   border-color: transparent;
-  animation: tile-flip 0.5s ease;
+  transform-origin: center;
+  will-change: transform;
+  backface-visibility: hidden;
+  animation: tile-flip 0.38s ease-in-out;
 }
 
 .tile.correct {
@@ -29,13 +32,13 @@
 
 @keyframes tile-flip {
   0% {
-    transform: rotateX(0deg);
+    transform: perspective(600px) rotateX(0deg);
   }
   50% {
-    transform: rotateX(90deg);
+    transform: perspective(600px) rotateX(-88deg);
   }
   100% {
-    transform: rotateX(0deg);
+    transform: perspective(600px) rotateX(0deg);
   }
 }
 

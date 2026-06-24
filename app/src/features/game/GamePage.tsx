@@ -1,10 +1,11 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useGame } from "./useGame";
 import { FINAL_ANTE } from "./gameEngine";
 import { getModifier } from "./modifiers";
 import { saveRun, shareRun } from "../../lib/runs";
 import { Tile } from "../../components/Tile";
 import { ModifierCard } from "../../components/ModifierCard";
+import { ensureMusic, stopMusic, playSfx } from "../../lib/sound";
 
 const CELL = 46;
 
@@ -13,6 +14,18 @@ export default function GamePage() {
   const [input, setInput] = useState("");
   const [message, setMessage] = useState("");
   const [savedId, setSavedId] = useState<number | null>(null);
+
+  // Background music while on the roguelike page.
+  useEffect(() => {
+    ensureMusic("roguelike");
+    return () => stopMusic();
+  }, []);
+
+  // Win / lose sting.
+  useEffect(() => {
+    if (run.status === "won") playSfx("win");
+    else if (run.status === "lost") playSfx("lose");
+  }, [run.status]);
 
   const { round } = run;
   const len = 5;

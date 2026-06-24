@@ -22,7 +22,7 @@ export function Tile({
       style={{
         width: size,
         height: size,
-        animationDelay: revealed ? `${index * 0.18}s` : undefined,
+        animationDelay: revealed ? `${index * 0.09}s` : undefined,
       }}
     >
       {letter}

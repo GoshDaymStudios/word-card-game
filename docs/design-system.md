@@ -87,6 +87,25 @@ name it after its key.
 - **Icons**: hearts (lives), money, the reveal power-up.
 - **Brand**: a logo for the nav + landing.
 
+## 4b. Sound pipeline
+
+Same "drop a file in a folder" idea. Loader: `app/src/lib/sound.ts`.
+
+```
+app/src/assets/
+  sfx/     <name>.mp3    one-shots:  click, win, lose, …
+  music/   <name>.mp3    loops:      roguelike, …
+```
+
+- `playSfx("name")` — one-shot. Missing file = no-op, **except `click`** which falls back to
+  a built-in synth blip, so buttons make a sound out of the box.
+- `ensureMusic("name")` / `stopMusic()` — looping background. Browsers block autoplay until
+  the first user gesture; the loader auto-resumes on the first click/tap.
+- **Mute** (`SoundToggle` 🔊 in the nav) is remembered in `localStorage`.
+
+Wired already: a click sound on every button; `win`/`lose` stings; `roguelike` music loops
+on `/game`. Add a track by naming the file after its key.
+
 ## 5. Implementation status
 
 - [x] Palette + dark theme foundation (variables, panels, buttons, tiles, background).

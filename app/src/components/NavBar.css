@@ -50,3 +50,11 @@
   color: var(--text-h);
   background: var(--accent-bg);
 }
+
+.sound-toggle {
+  padding: 0.3rem 0.5rem;
+  font-size: 0.95rem;
+  line-height: 1;
+  background: var(--panel);
+  border: 1px solid var(--border);
+}
