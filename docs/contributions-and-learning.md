@@ -55,6 +55,8 @@ code and explained it. Treat all of it as *your project to understand*.
 - **Roguelike** (`/game`): seeded run, antes 1–8 with rising targets (`40 × 1.5^(ante-1)`),
   3 lives, scoring × multiplier pipeline, 8 stacking modifiers, pick-1-of-3 between antes,
   win/lose. Pure logic in `gameEngine.ts` / `scoring.ts` / `modifiers.ts`, separate from UI.
+- **Round-failed screen** (Phase 6 polish): missing an ante target now pauses on a clear
+  "lost a life" screen instead of silently swapping the board.
 
 **Persistence & features**
 - `app/src/lib/runs.ts` — one place for all DB calls (`saveRun`, `getLeaderboard`,
@@ -68,9 +70,17 @@ code and explained it. Treat all of it as *your project to understand*.
 - Fixed all ESLint errors; added `lint` + `test` to **CI** (now lint + test + build).
 - **Container Nginx** (`app/nginx.conf`): SPA fallback (fixes deep-link 404s) + `/health`
   endpoint; filled the host reverse-proxy example.
-- **Monitoring**: Uptime Kuma added to docker-compose (same-host dashboard/demo) + README
-  documenting why UptimeRobot (external) is the real check.
-- Git: feature branch, logical commits, opened PR #1, CI green.
+
+**Production & operations**
+- **Shipped to production** at birkelandboss.no via the existing Docker + CI/CD + VPS flow;
+  both games, auth, save, leaderboards and sharing verified live.
+- **Fixed the blank-page prod bug**: Vite needs `VITE_*` at *build* time, but the static
+  Docker build had no env. Pass it as **build args** from a server-side `.env` (PR #2).
+  Wrote up the incident + lessons (see §4).
+- **Monitoring**: Uptime Kuma in docker-compose (same-host dashboard/demo) + a setup runbook
+  (`docs/monitoring.md`); README explains why UptimeRobot (external) is the real check.
+  UptimeRobot monitor configured.
+- Git: feature-branch workflow, logical commits, **PRs #1–#4**, CI green throughout.
 
 ---
 
