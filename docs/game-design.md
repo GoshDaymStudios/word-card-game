@@ -1,4 +1,4 @@
-# Game Design & Plan — Word Card Game
+# Game Design & Plan — Cards & Words
 
 Master design doc. Vision, architecture, both game modes, DB schema, and the phased plan.
 

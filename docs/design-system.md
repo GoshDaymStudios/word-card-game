@@ -1,4 +1,4 @@
-# Design system — Word Card
+# Design system — Cards & Words
 
 Visual direction + the art/asset pipeline. Heavy inspiration from **Balatro** (chunky dark
 panels, glossy cards, a bold "base × mult" scoring readout, juicy neon accents) — but with
@@ -40,7 +40,7 @@ alternatives are listed at the bottom.
 
 ## 3. Balatro → our game (component mapping)
 
-| Balatro | Word Card |
+| Balatro | Cards & Words |
 |---|---|
 | Jokers (top row) | **Modifiers** held in a run — shown as a card row with art |
 | Played hand (center) | the **guess grid** (flip tiles) |

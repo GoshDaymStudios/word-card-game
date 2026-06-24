@@ -1,4 +1,4 @@
-# Contributions & Learning — Word Card Game
+# Contributions & Learning — Cards & Words
 
 Purpose: an honest record of **who built what**, and a **study guide** of the concepts you
 should be able to explain (e.g. in a job interview). Be straight about AI assistance — the

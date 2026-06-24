@@ -16,7 +16,7 @@ export function NavBar() {
   return (
     <header className="nav">
       <Link to="/" className="nav-brand">
-        Word Card <span className="nav-beta">BETA</span>
+        Cards &amp; Words <span className="nav-beta">BETA</span>
       </Link>
       <nav className="nav-links">
         {LINKS.map((l) => (

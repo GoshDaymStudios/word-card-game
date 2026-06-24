@@ -27,7 +27,7 @@ export default function HomePage() {
           EARLY ACCESS · BETA
         </span>
 
-        <h1 style={{ marginTop: 0, marginBottom: "0.75rem" }}>Word Card</h1>
+        <h1 style={{ marginTop: 0, marginBottom: "0.75rem" }}>Cards &amp; Words</h1>
 
         <p style={{ marginBottom: "2rem", lineHeight: 1.6 }}>
           A word game that mixes the simplicity of Wordle with the roguelike runs,
