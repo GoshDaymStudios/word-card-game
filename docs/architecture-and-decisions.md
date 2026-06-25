@@ -6,7 +6,7 @@ experiment in AI-augmented development.
 
 ## The story (how it was built)
 
-Cards & Words began as **Tor's solo project** with a DevOps focus — the goal was to learn
+Cards & Words began as **a solo project** with a DevOps focus — the goal was to learn
 shipping and operating a real web app, not just writing front-end code. The **foundation was
 built first, by hand**:
 
@@ -18,9 +18,9 @@ built first, by hand**:
 
 At that point the infrastructure was real but the game was a placeholder. From there, **AI
 (Claude) was brought in on purpose** — as a way to (a) build out the actual gameplay quickly,
-(b) learn the codebase by improving it, and (c) harden the DevOps side. Tor architected and
+(b) learn the codebase by improving it, and (c) harden the DevOps side. I (Tor) architected and
 directed; the AI accelerated implementation. We're transparent about this because AI-assisted
-development is a normal, useful skill — and because being able to *explain* the system (below)
+development is a normal, useful skill — and because being able to _explain_ the system (below)
 matters more than who typed each line.
 
 **Built with AI assistance:** the two game modes and the shared word engine, scoring and
@@ -58,7 +58,7 @@ differs.
   output. Why: small image, closer to prod.
 - **SPA deep-link 404** — a client-routed SPA 404s on refresh of `/leaderboard` under plain
   static serving; `try_files $uri /index.html` fixes it (`app/nginx.conf`).
-- **Build-time vs runtime config** — Vite inlines `VITE_*` at *build* time; the Docker build
+- **Build-time vs runtime config** — Vite inlines `VITE_*` at _build_ time; the Docker build
   must receive them as build args (a real bug we hit and fixed when the prod bundle shipped
   with no Supabase env → blank page).
 - **Row Level Security (RLS)** — Postgres policies enforce access in the database, not the
