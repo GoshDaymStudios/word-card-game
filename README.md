@@ -8,7 +8,9 @@ ship-it-and-operate-it stack.
 **Status:** Early access / beta. Playable end to end; gameplay balance, art and audio are
 still being polished.
 
-<!-- TODO: drop a gameplay GIF / screenshots here (see docs/screenshots/). -->
+<p align="center">
+  <img src="docs/screenshots/gameplay.gif" alt="Cards & Words gameplay" width="440">
+</p>
 
 ---
 
@@ -21,12 +23,8 @@ wanted to practise all of that on something real and live, not a tutorial.
 
 The spark was small: during our bachelor thesis we played Wordle every day, and a fellow
 student of mine, Jørgen, pitched the idea — *what if Wordle had Balatro-style roguelike runs?*
-So we built it: a simple, fun game as the vehicle, with real engineering behind it — Docker,
-CI/CD, a VPS behind Nginx, secrets, a health endpoint and monitoring.
-
-On AI: I'm transparent that I used Claude to build out the game and harden the ops, while I
-directed the product, the architecture and the decisions. Building well with AI is a real
-skill — and I can explain why every part exists (below).
+So we built the beta version: a simple, fun game as the vehicle, with real engineering behind
+it — Docker, CI/CD, a VPS behind Nginx, secrets, a health endpoint and monitoring.
 
 ## What's under the hood
 
@@ -63,6 +61,15 @@ behind it:
 - **Roguelike** — a run of word rounds with rising target scores, three lives, and stacking
   **modifiers** you pick between antes (vowel bonuses, fast-solve multipliers, comebacks…).
   Clear the final ante to win; miss a target too often and the run ends.
+
+<p align="center">
+  <img src="docs/screenshots/roguelike.png" alt="Roguelike run with modifier cards" width="240">
+  &nbsp;
+  <img src="docs/screenshots/daily.png" alt="Daily puzzle" width="240">
+  &nbsp;
+  <img src="docs/screenshots/skin-dark.png" alt="The same game in a dark skin" width="240">
+</p>
+<p align="center"><em>Roguelike run · Daily · a Balatro-inspired dark skin</em></p>
 
 ## Tech stack
 
