@@ -1,283 +1,110 @@
-# Cards & Words
+# Cards & Words 🎴
 
-A web-based word game inspired by Wordle and Balatro.
+A web word game that mixes the simplicity of **Wordle** with the roguelike runs, stacking
+modifiers and escalating tension of **Balatro** — wrapped in a small but real
+ship-it-and-operate-it stack.
 
-Built as a small full-stack project with focus on gameplay, persistence, and simple deployment.
+**Live demo:** [birkelandboss.no](https://birkelandboss.no)
+**Status:** Early access / beta. Playable end to end; gameplay balance, art and audio are
+still being polished.
 
----
-
-## Tech Stack
-
-- Frontend: React + TypeScript (Vite)
-- Backend: Supabase (Auth + Database)
-- DevOps: Docker, docker-compose (local setup)
-- Hosting (planned): VPS (Hetzner) + Nginx
+<!-- TODO: drop a gameplay GIF / screenshots here (see docs/screenshots/). -->
 
 ---
 
-## Project Structure
+## Why we built this
 
-```
-root/
-├── app/ # Frontend application
-├── docker-compose.yml # Docker setup
-├── docs/ # Notes / architecture / ideas
-├── infra/ # Nginx + deployment config
-```
+I recently finished my bachelor in **Digital Infrastructure and Cybersecurity at NTNU**, and
+the part that stuck with me wasn't any single language — it was everything *around* the code:
+Linux, virtualization, cloud, monitoring, infrastructure as code, and getting robust services
+to actually run in production. I wanted a project where I could practise that for real: not a
+tutorial, but a live app that I deploy, break, fix and keep running.
 
----
+So a friend and I (we tinker under the name **GoshDaymStudios**) picked a deliberately *simple,
+fun* product as the vehicle — a word game — and put the effort into the engineering behind it:
+Docker, CI/CD, a VPS behind Nginx, environment/secrets handling, a health endpoint and
+monitoring. The game is the fun excuse; shipping and operating it like a real product is the
+point.
 
-## Getting Started
+I love that something this small can still exercise the whole pipeline end to end.
 
-### 1. Clone the repository
+## How it was built (and an honest note on AI)
 
-```
-git clone <repo-url>
-cd word-card-game
-```
+I built the **foundation by hand** — the part most relevant to where I want to work: the repo
+and project structure, Supabase auth and database, the Dockerfile and docker-compose, the
+GitHub Actions CI/CD, and the Hetzner VPS with Nginx, HTTPS and a firewall. At that point the
+infrastructure was real, but the game itself was a placeholder.
 
----
+From there I worked **with AI as a partner**: I used Claude to build out the actual gameplay
+quickly and to harden the DevOps side, while I directed the product, the architecture and the
+decisions. I'm deliberately transparent about this — building effectively with AI is, I
+believe, a real and increasingly valuable skill — but the vision and the engineering judgment
+are mine. Being able to *explain why every part exists* (below) matters more than who typed
+each line, and I can.
 
-### 2. Set up environment variables
+## What's under the hood
 
-Create a `.env` file inside `/app` based on `.env.example`.
+It looks simple on the surface, and the UX is meant to be. The interesting part is everything
+behind it:
 
-Example:
+- **Two games, one app.** A daily Wordle and a Balatro-style roguelike run share one auth, one
+  database, one deployment and one **word engine** (`lib/words`) — only the gameplay differs.
+  Game logic is pure TypeScript, kept separate from React, and unit-tested.
+- **Supabase backend** with **Row Level Security** — access is enforced in the database, not
+  the frontend (which is why the public anon key is safe to ship). One `runs` table with a
+  `mode` column + flexible JSON per run powers two leaderboards and public run sharing.
+- **Production-minded Docker:** a multi-stage build (Node builds, Nginx serves the static
+  output), with an **SPA fallback** so deep links don't 404 and a **`/health`** endpoint for
+  monitoring.
+- **CI/CD:** GitHub Actions runs lint + tests + build on every push, then SSH-deploys to the
+  VPS on merge to `main`. Secrets live in GitHub Secrets, never in the repo.
+- **Monitoring with a bit of nuance:** an external **UptimeRobot** check hits `/health` from
+  off-box (a monitor on the same server dies *with* the server), while a self-hosted **Uptime
+  Kuma** gives a dashboard.
+- **Real-world resilience.** Shipping for real means hitting real problems: after switching the
+  container from the dev server to a proper static Nginx build, production went blank — Vite
+  inlines environment variables at *build* time and the Docker build had none. Diagnosing and
+  fixing that (passing the values as build args) was exactly the kind of build-time-vs-runtime
+  lesson I wanted from this project.
+- **Drop-in art & sound pipelines** and a **live skin switcher** — add an image or audio clip
+  by filename and it's picked up automatically; swap between a clean "Classic" look and a few
+  Balatro-inspired dark skins on the fly.
 
-```
-VITE_SUPABASE_URL=your_url
-VITE_SUPABASE_PUBLISHABLE_KEY=your_key
-```
+## The game
 
-Do NOT commit real secrets.
+- **Daily** — a date-seeded Wordle: everyone gets the same word, with a streak and a shareable
+  result.
+- **Roguelike** — a run of word rounds with rising target scores, three lives, and stacking
+  **modifiers** you pick between antes (vowel bonuses, fast-solve multipliers, comebacks…).
+  Clear the final ante to win; miss a target too often and the run ends.
 
----
+## Tech stack
 
-### 3. Run the project
+React 19 + TypeScript (Vite) · Supabase (Postgres + Row Level Security) · Vitest · Docker +
+docker-compose · GitHub Actions (CI/CD) · Hetzner VPS + Nginx · UptimeRobot + Uptime Kuma ·
+deployed at [birkelandboss.no](https://birkelandboss.no).
 
-You can run the project in two ways:
+## Run it locally
 
-#### Option A – Local development (recommended)
+The games themselves run client-side, so you can play without any backend:
 
-```
+```bash
 cd app
 npm install
-npm run dev
+npm run dev      # http://localhost:5173
 ```
 
-App runs on:  
-http://localhost:5173
+Auth, saving and leaderboards need a Supabase project — see
+[`CONTRIBUTING.md`](CONTRIBUTING.md) for the full setup, Docker usage, and the database schema
+(`infra/supabase/schema.sql`). Architecture and decisions live in
+[`docs/architecture-and-decisions.md`](docs/architecture-and-decisions.md).
+
+## License
+
+© Tor Arne Birkeland & Jørgen (GoshDaymStudios). Shared publicly for portfolio and
+demonstration purposes — see [`LICENSE`](LICENSE).
 
 ---
 
-#### Option B – Docker
-
-From the project root:
-
-```
-docker compose up --build
-```
-
-App runs on:  
-http://localhost:5173
-
----
-
-## Development Environments
-
-The project can be run in two separate environments:
-
-### Local (npm)
-
-- Runs directly on your machine
-- Uses local `node_modules`
-- Best for fast development
-
-### Docker
-
-- Runs inside a container
-- Has its own isolated `node_modules`
-- Ensures consistent environment across machines
-- Closer to production setup
-
-These environments are completely separate.
-
-Running `npm install` locally does not affect Docker, and Docker does not affect your local setup.
-
----
-
-## Supabase Setup
-
-This project uses a shared Supabase project.
-
-To get started:
-
-1. Ask a maintainer for the project URL and publishable key
-2. Create a `.env` file inside `app/`
-3. Add the required variables:
-
-```
-VITE_SUPABASE_URL=your_url
-VITE_SUPABASE_PUBLISHABLE_KEY=your_key
-```
-
-Do not commit secrets or local `.env` files.
-
-> **Note:** If you don’t have access to the shared project, create your own and follow the setup guide in `/docs`.
-
-> Database schema + RLS: run `infra/supabase/schema.sql` in the Supabase SQL Editor
-> (idempotent — safe on an existing DB). Details in `docs/supabase.md`.
-
----
-
-## Deployment (production)
-
-CI/CD: pushing to `main` triggers a GitHub Action that SSHes into the VPS and runs
-`git pull` + `docker compose up -d --build`.
-
-**Important — build-time env vars.** Vite inlines `VITE_*` variables at *build* time, and
-the Docker build does not include `.env` (it's gitignored / dockerignored). So the values
-are passed as **build args** from a `.env` file sitting next to `docker-compose.yml` on the
-server. Without it the app builds fine but shows a **blank page** (the Supabase client throws
-on load). Create it once on the server:
-
-```
-# /home/<user>/apps/word-card-game/.env  (NOT committed; the anon key is public-safe)
-VITE_SUPABASE_URL=https://<your-project>.supabase.co
-VITE_SUPABASE_PUBLISHABLE_KEY=sb_publishable_xxx
-```
-
-Then `docker compose up -d --build` rebuilds with the values baked in.
-
----
-
-## Health & Monitoring
-
-The app container serves a health endpoint:
-
-```
-GET /health  ->  200 "ok"
-```
-
-Monitoring is intentionally two layers:
-
-- **UptimeRobot (external — the real check).** A free HTTP monitor hits
-  `https://<domain>/health` from outside the server. Because it runs off-box, it catches
-  the case that matters most: the whole VPS being down. **This is the alert we rely on.**
-
-- **Uptime Kuma (self-hosted — dashboard / demo).** Runs as a container on the same VPS
-  (`uptime-kuma` service in `docker-compose.yml`). Nice dashboard and history, but it lives
-  on the same machine as the app, so it shares the same **failure domain** — if the server
-  dies, Kuma dies with it and can't alert. So Kuma is for the dashboard and as a DevOps
-  demonstration, **not** the safety net. To be a true external monitor it would need to run
-  on a separate host (e.g. a free-tier VM elsewhere).
-
-Kuma listens on `127.0.0.1:3001` (not exposed publicly). Reach it for first-time setup via
-an SSH tunnel:
-
-```
-ssh -L 3001:localhost:3001 <user>@<vps>
-# then open http://localhost:3001
-```
-
-…or proxy a subdomain to it from the host Nginx (see `infra/nginx/example.conf`).
-
----
-
-## Git Workflow
-
-We use a simple feature branch workflow.
-
-### 1. Create a branch
-
-```
-git checkout -b feature/short-description
-```
-
-Examples:
-
-- feature/auth-page
-- feature/leaderboard
-- fix/navbar-layout
-
----
-
-### 2. Make changes and commit
-
-```
-git add .
-git commit -m "Add: short description"
-```
-
----
-
-### 3. Push your branch
-
-```
-git push origin feature/short-description
-```
-
----
-
-### 4. Open Pull Request
-
-- Open a PR into `main`
-- Describe what you changed
-- Keep it focused and small
-
----
-
-### 5. Merge
-
-- Merge after review
-- Delete branch after merge
-
----
-
-### Sync your local branch
-
-```
-git checkout main
-git pull origin main
-```
-
----
-
-### Guidelines
-
-- Do not work directly on `main`
-- Keep branches small and focused
-- Use clear commit messages
-- Do not commit `.env` files or secrets
-
----
-
-## Current Status
-
-- Two games in one app, sharing a word engine (`app/src/lib/words`):
-  - **Daily** (`/daily`) — Wordle-style, date-seeded word, streak, emoji share.
-  - **Roguelike** (`/game`) — Balatro-style run: antes, target scores, stacking modifiers.
-- Auth, run saving, two leaderboards (per mode), and public run sharing (`/share/:id`).
-- Vitest suite (engine + scoring + word logic); CI runs lint + tests + build.
-- Dockerised (multi-stage Nginx) with SPA fallback + `/health`; deploy to Hetzner via CI/CD.
-
-See `docs/game-design.md` for the living status/plan.
-
----
-
-## Roadmap
-
-- [x] Core gameplay loop (both modes)
-- [x] Save runs to database
-- [x] Leaderboard (per mode)
-- [x] Sharing runs
-- [x] Deploy to VPS (Docker + Nginx + CI/CD)
-- [ ] Polish / juice: animation, sound, "round failed" screen, balance pass
-- [ ] Monitoring: UptimeRobot (external) + Uptime Kuma (dashboard)
-
----
-
-## Authors
-
-Tor – DevOps, infrastructure, deployment, project coordination (+ misc & potatoes)  
-Jørgen – Lead developer, frontend, backend, gameplay (+ misc & potatoes)
+Made by two friends who wanted an excuse to ship something real. Hope you enjoy a run or two —
+and thanks for reading. 🎴
