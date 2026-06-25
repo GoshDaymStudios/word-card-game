@@ -40,7 +40,7 @@ Prod used to run the **Vite dev server in the container** with `env_file: app/.e
 `supabase.ts` threw on load, and the page went blank. CI stayed green (it only runs
 `npm run build`, which succeeds without env; the throw is runtime). Fix: pass env as Docker
 **build args** from a root `.env` (PR #2). Lessons captured in
-`contributions-and-learning.md`.
+`architecture-and-decisions.md`.
 
 Then: **Phase 6 (juice/polish)** is the main remaining build work.
 
