@@ -43,12 +43,10 @@ behind it:
 - **Two games, one app.** A daily Wordle and a Balatro-style roguelike run share one auth, one
   database, one deployment and one **word engine** (`lib/words`) — only the gameplay differs.
   Game logic is pure TypeScript, kept separate from React, and unit-tested.
-- **Supabase backend** with **Row Level Security** — access is enforced in the database, not
-  the frontend (which is why the public anon key is safe to ship). One `runs` table with a
-  `mode` column + flexible JSON per run powers two leaderboards and public run sharing.
-- **Production-minded Docker:** a multi-stage build (Node builds, Nginx serves the static
-  output), with an **SPA fallback** so deep links don't 404 and a **`/health`** endpoint for
-  monitoring.
+- **Supabase + Row Level Security** — access is enforced in the database, not the frontend, so
+  the public key is safe to ship; one flexible `runs` table powers both leaderboards and sharing.
+- **Multi-stage Docker, served by Nginx:** Node builds the app, Nginx serves the static output,
+  with an **SPA fallback** so deep links don't 404 and a **`/health`** endpoint for monitoring.
 - **CI/CD:** GitHub Actions runs lint + tests + build on every push, then SSH-deploys to the
   VPS on merge to `main`. Secrets live in GitHub Secrets, never in the repo.
 - **Monitoring with a bit of nuance:** an external **UptimeRobot** check hits `/health` from
@@ -59,14 +57,6 @@ behind it:
   inlines environment variables at *build* time and the Docker build had none. Diagnosing and
   fixing that (passing the values as build args) was exactly the kind of build-time-vs-runtime
   lesson I wanted from this project.
-- **Drop-in art & sound pipelines** and a **live skin switcher** — add an image or audio clip
-  by filename and it's picked up automatically; swap between a clean "Classic" look and a few
-  Balatro-inspired dark skins on the fly.
-
-<p align="center">
-  <img src="docs/screenshots/skin-dark.png" alt="A Balatro-inspired dark skin" width="620">
-  <br><em>One of the live skins — a Balatro-inspired dark look (the default is a clean, minimal "Classic").</em>
-</p>
 
 ## The game
 
@@ -79,6 +69,10 @@ behind it:
 <p align="center">
   <img src="docs/screenshots/roguelike.png" alt="Roguelike run with modifier cards" width="560">
   <br><em>A roguelike run — stacking modifier cards above the board.</em>
+</p>
+<p align="center">
+  <img src="docs/screenshots/skin-dark.png" alt="A dark skin" width="560">
+  <br><em>…and you can swap skins on the fly — here's one of the dark ones (default is a clean "Classic").</em>
 </p>
 
 ## Tech stack
@@ -108,5 +102,5 @@ MIT — see [`LICENSE`](LICENSE). Built by Tor Arne Birkeland and Jørgen (GoshD
 
 ---
 
-Made by two friends who wanted an excuse to ship something real. Hope you enjoy a run or two —
+Made by two buddies who wanted an excuse to ship something real. Hope you enjoy a run or two —
 and thanks for reading. 🎴
