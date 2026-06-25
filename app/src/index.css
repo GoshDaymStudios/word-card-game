@@ -1,33 +1,34 @@
 /* ============================================================================
-   Word Card — theme. "Neon Twilight" palette (Balatro-inspired, our own colors).
-   Re-palette by editing the variables in :root. See docs/design-system.md.
+   Cards & Words — theming. Default skin is "Classic" (Wordle-style, light, minimal).
+   The other skins are Balatro-inspired dark palettes, toggled via <html data-theme>.
+   See docs/design-system.md.
    ========================================================================== */
 :root {
-  /* palette */
-  --bg: #0f0c18;
-  --panel: #1d1730;
-  --panel-2: #271f3f;
-  --border: #3a2f56;
-  --text-h: #f1ecff;
-  --text: #a99fc4;
-  --accent: #a855f7;
-  --base: #22d3ee; /* "chips" / base score */
-  --mult: #fb5a76; /* multiplier */
-  --gold: #f5c542; /* money / rewards */
-
-  --accent-bg: rgba(168, 85, 247, 0.16);
-  --accent-border: rgba(168, 85, 247, 0.55);
+  /* "Classic" — light & minimal (default) */
+  --bg: #ffffff;
+  --panel: #ffffff;
+  --panel-2: #f4f4f5;
+  --border: #d3d6da;
+  --text-h: #1a1a1b;
+  --text: #6b7280;
+  --accent: #6aaa64; /* Wordle green */
+  --base: #6aaa64;
+  --mult: #c9b458;
+  --gold: #b59f3b;
+  --accent-bg: rgba(106, 170, 100, 0.12);
+  --accent-border: rgba(106, 170, 100, 0.55);
   --shadow:
-    rgba(0, 0, 0, 0.45) 0 10px 22px -8px, rgba(0, 0, 0, 0.3) 0 4px 8px -4px;
+    rgba(0, 0, 0, 0.1) 0 8px 18px -10px, rgba(0, 0, 0, 0.06) 0 2px 6px -4px;
+  --bg-image: none;
 
   /* type */
   --sans: system-ui, "Segoe UI", Roboto, sans-serif;
-  --display: "Lilita One", system-ui, sans-serif;
+  --display: system-ui, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
   --mono: ui-monospace, Consolas, monospace;
 
   font: 17px/145% var(--sans);
   letter-spacing: 0.1px;
-  color-scheme: dark;
+  color-scheme: light;
   color: var(--text);
   background: var(--bg);
   font-synthesis: none;
@@ -40,7 +41,35 @@
   }
 }
 
-/* Alternative palettes — toggled via <html data-theme="..."> (see ThemeToggle). */
+/* Dark skins (Balatro-inspired) share the chunky display font + a moody glow bg. */
+:root[data-theme="twilight"],
+:root[data-theme="ember"],
+:root[data-theme="deepsea"] {
+  --display: "Lilita One", system-ui, sans-serif;
+  --shadow:
+    rgba(0, 0, 0, 0.45) 0 10px 22px -8px, rgba(0, 0, 0, 0.3) 0 4px 8px -4px;
+  color-scheme: dark;
+}
+
+:root[data-theme="twilight"] {
+  --bg: #0f0c18;
+  --panel: #1d1730;
+  --panel-2: #271f3f;
+  --border: #3a2f56;
+  --text-h: #f1ecff;
+  --text: #a99fc4;
+  --accent: #a855f7;
+  --base: #22d3ee;
+  --mult: #fb5a76;
+  --gold: #f5c542;
+  --accent-bg: rgba(168, 85, 247, 0.16);
+  --accent-border: rgba(168, 85, 247, 0.55);
+  --bg-image:
+    radial-gradient(1200px 600px at 18% -10%, rgba(168, 85, 247, 0.2), transparent 60%),
+    radial-gradient(1000px 700px at 100% 0%, rgba(34, 211, 238, 0.1), transparent 55%),
+    radial-gradient(900px 700px at 50% 120%, rgba(251, 90, 118, 0.12), transparent 55%);
+}
+
 :root[data-theme="ember"] {
   --bg: #140f0c;
   --panel: #221813;
@@ -54,6 +83,10 @@
   --gold: #fde68a;
   --accent-bg: rgba(249, 115, 22, 0.16);
   --accent-border: rgba(249, 115, 22, 0.55);
+  --bg-image:
+    radial-gradient(1200px 600px at 18% -10%, rgba(249, 115, 22, 0.2), transparent 60%),
+    radial-gradient(1000px 700px at 100% 0%, rgba(245, 158, 11, 0.1), transparent 55%),
+    radial-gradient(900px 700px at 50% 120%, rgba(239, 68, 68, 0.12), transparent 55%);
 }
 :root[data-theme="deepsea"] {
   --bg: #07171a;
@@ -68,17 +101,17 @@
   --gold: #facc15;
   --accent-bg: rgba(45, 212, 191, 0.16);
   --accent-border: rgba(45, 212, 191, 0.55);
+  --bg-image:
+    radial-gradient(1200px 600px at 18% -10%, rgba(45, 212, 191, 0.18), transparent 60%),
+    radial-gradient(1000px 700px at 100% 0%, rgba(56, 189, 248, 0.1), transparent 55%),
+    radial-gradient(900px 700px at 50% 120%, rgba(244, 114, 182, 0.12), transparent 55%);
 }
 
 body {
   margin: 0;
   color: var(--text);
   min-height: 100svh;
-  background:
-    radial-gradient(1200px 600px at 18% -10%, rgba(168, 85, 247, 0.2), transparent 60%),
-    radial-gradient(1000px 700px at 100% 0%, rgba(34, 211, 238, 0.1), transparent 55%),
-    radial-gradient(900px 700px at 50% 120%, rgba(251, 90, 118, 0.12), transparent 55%),
-    var(--bg);
+  background: var(--bg-image), var(--bg);
   background-attachment: fixed;
 }
 
@@ -95,7 +128,7 @@ body {
 h1,
 h2 {
   font-family: var(--display);
-  font-weight: 400;
+  font-weight: 700;
   color: var(--text-h);
   letter-spacing: 0.4px;
 }

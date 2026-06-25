@@ -20,11 +20,11 @@ export function FlipSoundPicker() {
       aria-label="Flip sound"
       title="Flip sound"
     >
-      <option value="daily">🎲 Flip: Daily</option>
-      <option value="shuffle">🔀 Flip: Shuffle</option>
+      <option value="daily">🎲 Daily</option>
+      <option value="shuffle">🔀 Shuffle</option>
       {sounds.map((s) => (
         <option key={s} value={s}>
-          🔊 {s}
+          {s}
         </option>
       ))}
     </select>

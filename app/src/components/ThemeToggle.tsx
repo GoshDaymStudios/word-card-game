@@ -2,14 +2,15 @@ import { useEffect, useState } from "react";
 import "./ThemeToggle.css";
 
 const THEMES = [
+  { id: "classic", label: "Classic" },
   { id: "twilight", label: "Twilight" },
   { id: "ember", label: "Ember" },
   { id: "deepsea", label: "Deep Sea" },
 ];
 
 function initialTheme(): string {
-  if (typeof localStorage === "undefined") return "twilight";
-  return localStorage.getItem("theme") ?? "twilight";
+  if (typeof localStorage === "undefined") return "classic";
+  return localStorage.getItem("theme") ?? "classic";
 }
 
 // Palette switcher. Sets <html data-theme="..."> (CSS handles the rest) and
@@ -32,7 +33,7 @@ export function ThemeToggle() {
     >
       {THEMES.map((t) => (
         <option key={t.id} value={t.id}>
-          🎨 {t.label}
+          {t.label}
         </option>
       ))}
     </select>
