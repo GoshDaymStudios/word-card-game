@@ -1,91 +1,7 @@
 # Game Design & Plan — Cards & Words
 
-Master design doc. Vision, architecture, both game modes, DB schema, and the phased plan.
-
-> **This doc is the living source of truth.** Update the Status section below whenever a
-> phase moves. Design sections describe the target; the Status section describes reality.
-
-## ▶ Resume here (next action) — updated 2026-06-24
-
-**MVP is LIVE and verified in prod** at birkelandboss.no: both games, auth, save, two
-leaderboards, share. PRs #1 (MVP) and #2 (prod env fix) merged & deployed. The blank-page
-incident is resolved (see below).
-
-**Monitoring** (`docs/monitoring.md`):
-1. ✅ UptimeRobot HTTP monitor on `https://birkelandboss.no/health` (external = real alert).
-2. 🟡 Uptime Kuma — container deployed/running; first-run setup (admin + `/health` monitor
-   via SSH tunnel to `127.0.0.1:3001`) **not done yet**.
-
-**Phase 6 (juice/polish) — DONE, in PR #5 `feat/ui-polish` (ready to merge):**
-- Round-failed screen; shared `Tile` with 3D-perspective flip + staggered cascade.
-- Balatro-inspired dark theme with **3 live-switchable palettes** (Twilight/Ember/Deep Sea,
-  CSS-variable driven), Lilita One display font, global nav + Beta badge, hero landing.
-- **Art pipeline** (`assets/{modifiers,tiles,backgrounds,icons,brand}` + `lib/art.ts`,
-  drop-in by filename) + placeholder modifier "joker" cards.
-- **Sound pipeline** (`assets/{sfx,music,flips}` + `lib/sound.ts`): click sfx (synth
-  fallback), flip cascade (one clip/letter, pitched up; **flip-sound picker**:
-  Daily/Shuffle/specific, default **Shuffle**), `roguelike` music, intro sting on entering
-  each game, win/lose stings (Daily + Roguelike) after the flip cascade; game over cuts the
-  music. Mute toggle. ~21 flip clips + intro + lose committed.
-See `docs/design-system.md` for the full visual/audio plan.
-
-**After PR #5 merges → app is a polished early-access BETA.** Remaining (optional, later):
-Uptime Kuma first-run, the two preventives (fail-loud, deploy smoke-test), balance pass,
-"one daily save per day" guard, win.mp3 + click.mp3 + music if desired, real art/icons.
-
-### Incident: blank production page (build-time env)
-Prod used to run the **Vite dev server in the container** with `env_file: app/.env`
-(env read at runtime → worked). The Docker rewrite to a **static nginx build** needs env at
-**build time**, but that wiring was missed — so the bundle had no Supabase values,
-`supabase.ts` threw on load, and the page went blank. CI stayed green (it only runs
-`npm run build`, which succeeds without env; the throw is runtime). Fix: pass env as Docker
-**build args** from a root `.env` (PR #2). Lessons captured in
-`architecture-and-decisions.md`.
-
-Then: **Phase 6 (juice/polish)** is the main remaining build work.
-
-## Status (living) — updated 2026-06-24
-
-| Phase | What | State |
-|---|---|---|
-| 0 | Cleanup sandboxes + this design doc | ✅ done |
-| 1 | Shared `lib/words/` (wordList ~640, `evaluateGuess`, `isSolved`, `wordAt`) | ✅ done + verified |
-| 1 | `mode` column on `runs` + RLS | ✅ live (ran `infra/supabase/schema.sql`; diagnostics confirmed) |
-| 2 | Daily mode (`/daily`) — seed word, 6 guesses, streak, emoji share, reveal power-up | ✅ done + played in browser |
-| 2 | Roguelike mode (`/game`) — antes 1–8, scoring×mult, pick-1-of-3 modifiers, win/lose | ✅ done + played in browser |
-| 3 | DevOps: `/health`, nginx conf, CI lint+test, RLS, monitoring | 🟡 done: container nginx (SPA fallback + `/health`), host proxy example, CI lint+test+build, RLS live, Uptime Kuma in docker-compose + README "Health & Monitoring". Left: deploy-verify `/health`, set up UptimeRobot (external) |
-| 4 | Wire completed runs → Supabase, both modes | ✅ done — both save via `lib/runs.ts`. Daily **verified live**; roguelike save pending manual check |
-| 5 | Two leaderboards (filter `mode`) + share page `/share/:id` | ✅ done — mode-tabbed `LeaderboardPage` (daily verified live), `SharePage`, GamePage share button (pending manual check) |
-| 6 | Juice/polish (animation, sound, theme, art/sound pipelines) | ✅ done in PR #5 (see Resume-here) — verified in browser |
-| 7 | Docs + README refresh | 🟡 ongoing (design-system.md added; README updated) |
-
-**Open follow-ups / known gaps (running TODO)**
-- [ ] **MANUAL: verify roguelike chain live** — play `/game` → Save → Leaderboard
-      "Roguelike" → Share → `/share/:id`. (Daily is verified; roguelike + share are not.)
-- [ ] **MANUAL: deploy + verify `/health` and deep-link refresh** don't 404 (new nginx.conf).
-      Claude's sandbox has no Docker, so this is a deploy-time check.
-- [ ] **Fail loud, not blank** — `supabase.ts` throws on missing env → blank screen. Make it
-      render a visible "missing config" message instead (so a misconfigured deploy is a
-      5-second diagnosis, not a mystery). [from the blank-prod-page incident]
-- [ ] **Deploy smoke-test checklist** — after each deploy: open the URL, check console,
-      click one deep link, `curl /health`. Optionally have CI build the Docker image + curl it.
-- [ ] **MANUAL: UptimeRobot** monitor on `/health` (external = the real check). Uptime Kuma
-      is already wired in docker-compose as the same-host dashboard/demo (see README).
-- [ ] **MANUAL: Uptime Kuma first-run setup** after deploy (SSH tunnel to `127.0.0.1:3001`,
-      create admin user, add a monitor on the app's `/health`).
-- [ ] **Push branch + open PR** (outward-facing — confirm first).
-- [ ] **Daily allows multiple saves per day** → leaderboard can show duplicate entries per
-      user/day. Add a "one save per day" guard or a "best per user" leaderboard query.
-- [ ] **Roguelike UX:** failing a target mid-ante silently swaps the board — add a "round
-      failed / life lost" interstitial (Phase 6 polish).
-- [ ] **Balance pass** on roguelike once more modifiers exist (targets/scoring are a first cut).
-- [ ] **No nav/header** — pages have ad-hoc `← Home` links; a shared nav would be nicer (Phase 6).
-- [x] ~~No test runner~~ — Vitest added; 30 tests cover `evaluateGuess`, scoring, engine flow.
-- [x] ~~Leaderboard reads legacy fields~~ — rewritten mode-aware in `LeaderboardPage`.
-- [x] ~~Daily not wired to Supabase~~ — both modes now save via `lib/runs.ts` (daily verified live).
-- [x] ~~Lint not in CI / RunsPage legacy code~~ — RunsPage rewritten (getMyRuns), all
-      set-state-in-effect errors fixed, `npm run lint` now runs in CI.
-- [x] ~~DB not live~~ — `infra/supabase/schema.sql` run; `mode` column + RLS confirmed.
+Design notes for Cards & Words: the vision, the two game modes, scoring and modifiers, the
+data model, and how it was built in phases.
 
 ## Vision
 
@@ -222,7 +138,7 @@ See `supabase.md` for the migration + RLS policies.
 
 ## Phased plan (two games, one app)
 
-- **Phase 0** — Cleanup sandbox folders; this design doc. (done this session)
+- **Phase 0** — Project structure + this design doc.
 - **Phase 1** — Shared `lib/words/` (list + `evaluateGuess`). Add `mode` column to `runs`.
 - **Phase 2 (parallel gameplay)** — A: `features/game/` (roguelike) · B: `features/daily/`.
 - **Phase 3 (parallel, gameplay-independent — Tor)** — `/health`, fill `infra/nginx/example.conf`,
@@ -231,8 +147,3 @@ See `supabase.md` for the migration + RLS policies.
 - **Phase 5** — Two leaderboards (filter `mode`) + public share page (`/share/:id`).
 - **Phase 6** — Juice/polish both (animation, sound, theming).
 - **Phase 7** — Docs + README refresh.
-
-**Known cleanups folded into the phases:** leaderboard reads wrong fields
-(`run_data.result/rounds` vs saved `round/guesses/status`) → fix in Phase 4/5; empty
-`infra/nginx/example.conf` → Phase 3; `birkelandboss.no` in `vite.config.ts` `allowedHosts`
-only affects the dev server (prod serves a static build via nginx) → tidy in Phase 3.

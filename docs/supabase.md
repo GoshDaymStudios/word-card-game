@@ -115,7 +115,7 @@ alter table public.runs
 
 RLS must be enabled AND have policies, or reads/writes silently fail (or over-expose).
 
-**Leaderboard decision (Phase 5):** the leaderboard shows EVERYONE's scores, so `runs` needs
+**Leaderboard note:** the leaderboard shows EVERYONE's scores, so `runs` needs
 a public read policy — `using (true)`, not "own runs only". Trade-off: all `run_data`
 becomes publicly readable. For a word game that's fine (no sensitive data). Tighten later
 with a view exposing only `score/username/created_at` if ever needed.
