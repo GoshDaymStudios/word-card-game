@@ -14,33 +14,19 @@ still being polished.
 
 ## Why we built this
 
-I recently finished my bachelor in **Digital Infrastructure and Cybersecurity at NTNU**, and
-the part that stuck with me wasn't any single language — it was everything *around* the code:
-Linux, virtualization, cloud, monitoring, infrastructure as code, and getting robust services
-to actually run in production. I wanted a project where I could practise that for real: not a
-tutorial, but a live app that I deploy, break, fix and keep running.
+The subjects I enjoyed most during my bachelor in **Digital Infrastructure and Cybersecurity
+at NTNU** were the ones about *making something* — development — and everything around the
+code: Linux, virtualization, cloud, monitoring, infrastructure as code, wrangling servers. I
+wanted to practise all of that on something real and live, not a tutorial.
 
-So a friend and I (we tinker under the name **GoshDaymStudios**) picked a deliberately *simple,
-fun* product as the vehicle — a word game — and put the effort into the engineering behind it:
-Docker, CI/CD, a VPS behind Nginx, environment/secrets handling, a health endpoint and
-monitoring. The game is the fun excuse; shipping and operating it like a real product is the
-point.
+The spark was small: during our bachelor thesis we played Wordle every day, and a fellow
+student of mine, Jørgen, pitched the idea — *what if Wordle had Balatro-style roguelike runs?*
+So we built it: a simple, fun game as the vehicle, with real engineering behind it — Docker,
+CI/CD, a VPS behind Nginx, secrets, a health endpoint and monitoring.
 
-I love that something this small can still exercise the whole pipeline end to end.
-
-## How it was built (and an honest note on AI)
-
-I built the **foundation by hand** — the part most relevant to where I want to work: the repo
-and project structure, Supabase auth and database, the Dockerfile and docker-compose, the
-GitHub Actions CI/CD, and the Hetzner VPS with Nginx, HTTPS and a firewall. At that point the
-infrastructure was real, but the game itself was a placeholder.
-
-From there I worked **with AI as a partner**: I used Claude to build out the actual gameplay
-quickly and to harden the DevOps side, while I directed the product, the architecture and the
-decisions. I'm deliberately transparent about this — building effectively with AI is, I
-believe, a real and increasingly valuable skill — but the vision and the engineering judgment
-are mine. Being able to *explain why every part exists* (below) matters more than who typed
-each line, and I can.
+On AI: I'm transparent that I used Claude to build out the game and harden the ops, while I
+directed the product, the architecture and the decisions. Building well with AI is a real
+skill — and I can explain why every part exists (below).
 
 ## What's under the hood
 
@@ -101,8 +87,7 @@ Auth, saving and leaderboards need a Supabase project — see
 
 ## License
 
-© Tor Arne Birkeland & Jørgen (GoshDaymStudios). Shared publicly for portfolio and
-demonstration purposes — see [`LICENSE`](LICENSE).
+MIT — see [`LICENSE`](LICENSE). Built by Tor Arne Birkeland and Jørgen (GoshDaymStudios).
 
 ---
 
