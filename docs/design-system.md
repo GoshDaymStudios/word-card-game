@@ -4,16 +4,23 @@ Visual direction + the art/asset pipeline. Heavy inspiration from **Balatro** (c
 panels, glossy cards, a bold "base × mult" scoring readout, juicy neon accents) — but with
 **our own palette** so it doesn't read as a clone.
 
-## 1. Palette (CSS variables) + live theme switcher
+## 1. Palette (CSS variables) + live skin switcher
 
-The whole look is driven by variables in `app/src/index.css` `:root`. **Re-palette by editing
-these ~10 values — nothing else.** Default direction: **"Neon Twilight"** — deep violet night
-instead of Balatro's blue/green felt.
+The whole look is driven by variables in `app/src/index.css`. **Re-palette by editing those
+~10 values — nothing else.**
 
-Three palettes ship and can be switched **live** from the nav (`ThemeToggle` → sets
-`<html data-theme="twilight|ember|deepsea">`, remembered in `localStorage`): Twilight
-(violet), Ember (warm), Deep Sea (teal). Add a 4th by copying a `:root[data-theme="..."]`
-block in `index.css` and an entry in `ThemeToggle.tsx`.
+- **Default skin: "Classic"** — light, minimal, intentionally boring (Wordle-style): warm
+  parchment background, a muted **gray-brown** accent (chrome stays neutral), clean sans
+  heading. Green/yellow appear **only on guessed tiles** (Tile.css), never in the chrome.
+  Lives are a quill/feather (writing → words), not a heart. Lives in `:root`.
+- **Dark skins** (Balatro-inspired, chunky Lilita One display + glow background) are
+  `:root[data-theme="..."]` overrides: **Twilight** (violet), **Ember** (warm), **Deep Sea**
+  (teal). Each sets its palette + `--bg-image` (glow) + `--display`.
+
+Switched **live** from the **gear (⚙️) settings menu** in the nav (`SettingsMenu` →
+`ThemeToggle` sets `<html data-theme>`, remembered in `localStorage`). The menu groups three
+labeled controls: **Skin** (palette), **Sound** (flip-sound picker), **Mute**. Add a skin by
+copying a `:root[data-theme="..."]` block in `index.css` + an entry in `ThemeToggle.tsx`.
 
 | Variable | Role | Default |
 |---|---|---|
