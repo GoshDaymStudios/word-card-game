@@ -52,21 +52,5 @@ differs.
 - **Drop-in art & sound pipelines** (`import.meta.glob`) — add a file named after its key, no
   code change.
 
-## What I can explain (study guide)
-
-- **Docker multi-stage build** — Node stage builds; Nginx stage serves only the static
-  output. Why: small image, closer to prod.
-- **SPA deep-link 404** — a client-routed SPA 404s on refresh of `/leaderboard` under plain
-  static serving; `try_files $uri /index.html` fixes it (`app/nginx.conf`).
-- **Build-time vs runtime config** — Vite inlines `VITE_*` at _build_ time; the Docker build
-  must receive them as build args (a real bug we hit and fixed when the prod bundle shipped
-  with no Supabase env → blank page).
-- **Row Level Security (RLS)** — Postgres policies enforce access in the database, not the
-  frontend; that's why the Supabase anon key is safe to expose.
-- **CI/CD** — CI runs lint + tests + build; CD SSHes to the VPS and runs
-  `docker compose up -d --build`; secrets live in GitHub Secrets.
-- **Failure domains in monitoring** — a monitor on the same box dies with the box, so the real
-  alert (UptimeRobot) runs off-box hitting `/health`; self-hosted Uptime Kuma is the dashboard.
-
-See `docs/game-design.md` (architecture/plan) and `docs/design-system.md` (visual/audio) for
-detail.
+See `docs/game-design.md` (the game design/plan) and `docs/design-system.md` (visual/audio)
+for detail.

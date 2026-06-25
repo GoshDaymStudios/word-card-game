@@ -126,13 +126,11 @@ Wired already: a click sound on every button; a **flip cascade** (`playFlipRow` 
 one clip is enough); `win`/`lose` stings; `roguelike` music loops on `/game`. Add a track by
 naming the file after its key.
 
-## 5. Implementation status
+## 5. Not yet built (ideas)
 
-- [x] Palette + dark theme foundation (variables, panels, buttons, tiles, background).
-- [x] Art loader + folders + fallback; modifiers wired to use art when present.
-- [ ] Per-mode background images (loader ready; drop files in `backgrounds/`).
-- [ ] Modifier illustrations, tile/letter art, icons, logo (drop files in their folders).
-- [ ] Optional: full Balatro-style GamePage layout (sidebar panel, live base × mult).
+- Per-mode background images (loader ready — drop files in `backgrounds/`).
+- Modifier illustrations, tile/letter art, icons, a logo (drop files in their folders).
+- A fuller Balatro-style layout for the run (sidebar panel, live base × mult).
 
 ## Alternative palettes (swap the variables)
 

@@ -1,12 +1,6 @@
 # Monitoring runbook
 
-**Status (2026-06-24):**
-- ✅ **UptimeRobot** — monitor configured against `/health`.
-- 🟡 **Uptime Kuma** — container is deployed (in `docker-compose.yml`, running on the VPS),
-  but the **first-run setup is NOT done yet** (admin user + `/health` monitor still to be
-  created — follow section B below).
-
-Two layers, on purpose (see README "Health & Monitoring" for the why):
+Two layers, on purpose (see README "Engineering highlights" for the why):
 
 - **UptimeRobot** — external, off-box. The real "is the site up?" alert.
 - **Uptime Kuma** — self-hosted on the same VPS. Dashboard / DevOps demo, **not** the safety
@@ -34,9 +28,7 @@ get a down alert → `docker compose start web` → recovery alert. (Optional sa
 
 ---
 
-## B. Uptime Kuma (self-hosted dashboard) — NOT done yet
-
-> The container is already running on the VPS; only the first-run setup below remains.
+## B. Uptime Kuma (self-hosted dashboard)
 
 Kuma runs in a container bound to `127.0.0.1:3001` (not public). Reach it via an SSH tunnel.
 
