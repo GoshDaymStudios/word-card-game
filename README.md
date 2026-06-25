@@ -37,8 +37,7 @@ it — Docker, CI/CD, a VPS behind Nginx, secrets, a health endpoint and monitor
 
 ## Engineering highlights
 
-It looks simple on the surface, and the UX is meant to be. The interesting part is everything
-behind it:
+The game itself is intentionally simple. The interesting part is everything behind it:
 
 - **Two games, one app.** A daily Wordle and a Balatro-style roguelike run share one auth, one
   database, one deployment and one **word engine** (`lib/words`) — only the gameplay differs.
