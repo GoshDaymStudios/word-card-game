@@ -5,6 +5,29 @@ import { saveRun } from "../../lib/runs";
 import { Tile } from "../../components/Tile";
 import { playFlipRow, playSfx } from "../../lib/sound";
 
+// Daily streak — a stroke flame in the muted text color, matching the quill "lives" icon
+// (gray/boring on Classic, light on dark skins).
+function Streak({ count }: { count: number }) {
+  return (
+    <span style={{ display: "inline-flex", alignItems: "center", gap: 5, color: "var(--text)" }}>
+      <svg
+        width="15"
+        height="15"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        aria-hidden="true"
+      >
+        <path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z" />
+      </svg>
+      {count}
+    </span>
+  );
+}
+
 export default function DailyPage() {
   const { state, streak, guess, reveal, shareText, score, dateKey } = useDaily();
   const [input, setInput] = useState("");
@@ -88,7 +111,7 @@ export default function DailyPage() {
     <main style={{ padding: "2rem", maxWidth: 460, margin: "0 auto", textAlign: "center" }}>
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
         <h1 style={{ margin: 0 }}>Daily</h1>
-        <span>🔥 {streak.streak}</span>
+        <Streak count={streak.streak} />
       </div>
 
       <div style={{ display: "grid", gap: 6, justifyContent: "center", margin: "1.5rem 0" }}>
