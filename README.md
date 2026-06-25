@@ -43,8 +43,9 @@ behind it:
 - **Two games, one app.** A daily Wordle and a Balatro-style roguelike run share one auth, one
   database, one deployment and one **word engine** (`lib/words`) — only the gameplay differs.
   Game logic is pure TypeScript, kept separate from React, and unit-tested.
-- **Supabase + Row Level Security** — access is enforced in the database, not the frontend, so
-  the public key is safe to ship; one flexible `runs` table powers both leaderboards and sharing.
+- **Supabase + row-level security (RLS)** — access is enforced in the database, not the
+  frontend, so the public key is safe to ship; one flexible `runs` table powers both
+  leaderboards and sharing.
 - **Multi-stage Docker, served by Nginx:** Node builds the app, Nginx serves the static output,
   with an **SPA fallback** so deep links don't 404 and a **`/health`** endpoint for monitoring.
 - **CI/CD:** GitHub Actions runs lint + tests + build on every push, then SSH-deploys to the
@@ -77,7 +78,7 @@ behind it:
 
 ## Tech stack
 
-React 19 + TypeScript (Vite) · Supabase (Postgres + Row Level Security) · Vitest · Docker +
+React 19 + TypeScript (Vite) · Supabase (Postgres + row-level security) · Vitest · Docker +
 docker-compose · GitHub Actions (CI/CD) · Hetzner VPS + Nginx · UptimeRobot + Uptime Kuma ·
 deployed at [birkelandboss.no](https://birkelandboss.no).
 
