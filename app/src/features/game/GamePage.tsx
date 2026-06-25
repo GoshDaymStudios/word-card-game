@@ -9,6 +9,31 @@ import { ensureMusic, stopMusic, playSfx, playFlipRow } from "../../lib/sound";
 
 const CELL = 46;
 
+// A "life" shown as a quill/feather (writing → words), in the muted text color so it stays
+// boring/gray on Classic and adapts on the dark skins.
+function Lives({ count }: { count: number }) {
+  return (
+    <span style={{ display: "inline-flex", alignItems: "center", gap: 5, color: "var(--text)" }}>
+      <svg
+        width="15"
+        height="15"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        aria-hidden="true"
+      >
+        <path d="M20.24 12.24a6 6 0 0 0-8.49-8.49L5 10.5V19h8.5z" />
+        <line x1="16" y1="8" x2="2" y2="22" />
+        <line x1="17.5" y1="15" x2="9" y2="15" />
+      </svg>
+      {count}
+    </span>
+  );
+}
+
 export default function GamePage() {
   const { run, startNewGame, playGuess, pickModifier, continueRound } = useGame();
   const [input, setInput] = useState("");
@@ -111,7 +136,7 @@ export default function GamePage() {
     <main style={{ padding: "1.5rem", maxWidth: 460, margin: "0 auto", textAlign: "center" }}>
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
         <h1 style={{ margin: 0 }}>Run</h1>
-        <span>❤️ {run.lives}</span>
+        <Lives count={run.lives} />
       </div>
 
       {/* Stat bar */}
@@ -163,14 +188,16 @@ export default function GamePage() {
 
       {run.status === "round-failed" && (
         <div style={{ display: "grid", gap: "0.75rem", maxWidth: 360, margin: "0 auto" }}>
-          <h2 style={{ margin: 0, color: "#c0392b" }}>Round failed — lost a life 💔</h2>
+          <h2 style={{ margin: 0, color: "#c0392b" }}>Round failed — lost a life</h2>
           <p style={{ margin: 0 }}>
             Scored <strong>{round.roundScore}</strong> / target <strong>{run.targetScore}</strong>.
             {round.roundScore === 0
               ? ` The word was “${round.answer.toUpperCase()}”.`
               : ""}
           </p>
-          <p style={{ margin: 0 }}>❤️ {run.lives} {run.lives === 1 ? "life" : "lives"} left</p>
+          <p style={{ margin: 0, display: "flex", gap: 6, justifyContent: "center" }}>
+            <Lives count={run.lives} /> {run.lives === 1 ? "life" : "lives"} left
+          </p>
           <button onClick={continueRound}>Try this ante again</button>
         </div>
       )}

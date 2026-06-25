@@ -4,19 +4,21 @@
    See docs/design-system.md.
    ========================================================================== */
 :root {
-  /* "Classic" — light & minimal (default) */
-  --bg: #ffffff;
+  /* "Classic" — light, minimal, boring (default). Warm paper/leather tones; the
+     accent is a muted gray-brown, NOT green. Green/yellow appear only on guessed
+     tiles (see Tile.css) — never in the chrome. */
+  --bg: #f7f3e7; /* warm parchment */
   --panel: #ffffff;
-  --panel-2: #f4f4f5;
-  --border: #d3d6da;
-  --text-h: #1a1a1b;
-  --text: #6b7280;
-  --accent: #6aaa64; /* Wordle green */
+  --panel-2: #efe8d6;
+  --border: #cfc7b4; /* warm gray */
+  --text-h: #2a2520;
+  --text: #6f665a; /* muted warm gray */
+  --accent: #7a7167; /* boring gray-brown */
   --base: #6aaa64;
   --mult: #c9b458;
   --gold: #b59f3b;
-  --accent-bg: rgba(106, 170, 100, 0.12);
-  --accent-border: rgba(106, 170, 100, 0.55);
+  --accent-bg: rgba(122, 113, 103, 0.14);
+  --accent-border: rgba(122, 113, 103, 0.45);
   --shadow:
     rgba(0, 0, 0, 0.1) 0 8px 18px -10px, rgba(0, 0, 0, 0.06) 0 2px 6px -4px;
   --bg-image: none;

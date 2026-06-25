@@ -9,8 +9,10 @@ panels, glossy cards, a bold "base × mult" scoring readout, juicy neon accents)
 The whole look is driven by variables in `app/src/index.css`. **Re-palette by editing those
 ~10 values — nothing else.**
 
-- **Default skin: "Classic"** — light, minimal, Wordle-style (white bg, green accent, clean
-  sans heading). Lives in `:root`.
+- **Default skin: "Classic"** — light, minimal, intentionally boring (Wordle-style): warm
+  parchment background, a muted **gray-brown** accent (chrome stays neutral), clean sans
+  heading. Green/yellow appear **only on guessed tiles** (Tile.css), never in the chrome.
+  Lives are a quill/feather (writing → words), not a heart. Lives in `:root`.
 - **Dark skins** (Balatro-inspired, chunky Lilita One display + glow background) are
   `:root[data-theme="..."]` overrides: **Twilight** (violet), **Ember** (warm), **Deep Sea**
   (teal). Each sets its palette + `--bg-image` (glow) + `--display`.
