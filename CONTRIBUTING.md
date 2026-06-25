@@ -56,8 +56,8 @@ docker compose up --build
 ```
 
 > Production note: the Docker build needs `VITE_*` at **build time**. docker-compose passes
-> them as build args from a root `.env` (next to `docker-compose.yml`). See README "What's
-> under the hood" and `docs/supabase.md`.
+> them as build args from a root `.env` (next to `docker-compose.yml`). See README
+> "Engineering highlights" and `docs/supabase.md`.
 
 ## 4. Supabase (first-time)
 

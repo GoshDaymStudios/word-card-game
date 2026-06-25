@@ -35,7 +35,7 @@ it — Docker, CI/CD, a VPS behind Nginx, secrets, a health endpoint and monitor
   <br><em>The daily puzzle — same word for everyone, with a streak.</em>
 </p>
 
-## What's under the hood
+## Engineering highlights
 
 It looks simple on the surface, and the UX is meant to be. The interesting part is everything
 behind it:
