@@ -21,12 +21,12 @@ still being polished.
 ## Why we built this
 
 The subjects I enjoyed most during my bachelor in **Digital Infrastructure and Cybersecurity
-at NTNU** were the ones about *making something* — development — and everything around the
+at NTNU** were the ones about _making something_ — development — and everything around the
 code: Linux, virtualization, cloud, monitoring, infrastructure as code, wrangling servers. I
 wanted to practise all of that on something real and live, not a tutorial.
 
 The spark was small: during our bachelor thesis we played Wordle every day, and a fellow
-student of mine, Jørgen, pitched the idea — *what if Wordle had Balatro-style roguelike runs?*
+student of mine, Jørgen, pitched the idea — _what if Wordle had Balatro-style roguelike runs?_
 So we built the beta version: a simple, fun game as the vehicle, with real engineering behind
 it — Docker, CI/CD, a VPS behind Nginx, secrets, a health endpoint and monitoring.
 
@@ -50,11 +50,11 @@ The game itself is intentionally simple. The interesting part is everything behi
 - **CI/CD:** GitHub Actions runs lint + tests + build on every push, then SSH-deploys to the
   VPS on merge to `main`. Secrets live in GitHub Secrets, never in the repo.
 - **Monitoring with a bit of nuance:** an external **UptimeRobot** check hits `/health` from
-  off-box (a monitor on the same server dies *with* the server), while a self-hosted **Uptime
+  off-box (a monitor on the same server dies _with_ the server), while a self-hosted **Uptime
   Kuma** gives a dashboard.
 - **Real-world resilience.** Shipping for real means hitting real problems: after switching the
   container from the dev server to a proper static Nginx build, production went blank — Vite
-  inlines environment variables at *build* time and the Docker build had none. Diagnosing and
+  inlines environment variables at _build_ time and the Docker build had none. Diagnosing and
   fixing that (passing the values as build args) was exactly the kind of build-time-vs-runtime
   lesson I wanted from this project.
 
@@ -98,7 +98,7 @@ Auth, saving and leaderboards need a Supabase project — see
 
 ## License
 
-MIT — see [`LICENSE`](LICENSE). Built by Tor Arne Birkeland and Jørgen (GoshDaymStudios).
+MIT — see [`LICENSE`](LICENSE). Built by Tor Arne Birkeland and Jørgen Fenstad Kottum (GoshDaymStudios).
 
 ---
 
