@@ -4,12 +4,16 @@ A web word game that mixes the simplicity of **Wordle** with the roguelike runs,
 modifiers and escalating tension of **Balatro** — wrapped in a small but real
 ship-it-and-operate-it stack.
 
+More than the game, the point is to demonstrate the infrastructure and operations side of
+shipping a real product — Docker, CI/CD, a VPS behind Nginx, secrets, health checks and
+monitoring.
+
 **Live demo:** [birkelandboss.no](https://birkelandboss.no)
 **Status:** Early access / beta. Playable end to end; gameplay balance, art and audio are
 still being polished.
 
 <p align="center">
-  <img src="docs/screenshots/gameplay.gif" alt="Cards & Words gameplay" width="440">
+  <img src="docs/screenshots/gameplay.gif" alt="Cards & Words gameplay" width="680">
 </p>
 
 ---
@@ -25,6 +29,11 @@ The spark was small: during our bachelor thesis we played Wordle every day, and 
 student of mine, Jørgen, pitched the idea — *what if Wordle had Balatro-style roguelike runs?*
 So we built the beta version: a simple, fun game as the vehicle, with real engineering behind
 it — Docker, CI/CD, a VPS behind Nginx, secrets, a health endpoint and monitoring.
+
+<p align="center">
+  <img src="docs/screenshots/daily.png" alt="The daily puzzle" width="560">
+  <br><em>The daily puzzle — same word for everyone, with a streak.</em>
+</p>
 
 ## What's under the hood
 
@@ -54,6 +63,11 @@ behind it:
   by filename and it's picked up automatically; swap between a clean "Classic" look and a few
   Balatro-inspired dark skins on the fly.
 
+<p align="center">
+  <img src="docs/screenshots/skin-dark.png" alt="A Balatro-inspired dark skin" width="620">
+  <br><em>One of the live skins — a Balatro-inspired dark look (the default is a clean, minimal "Classic").</em>
+</p>
+
 ## The game
 
 - **Daily** — a date-seeded Wordle: everyone gets the same word, with a streak and a shareable
@@ -63,13 +77,9 @@ behind it:
   Clear the final ante to win; miss a target too often and the run ends.
 
 <p align="center">
-  <img src="docs/screenshots/roguelike.png" alt="Roguelike run with modifier cards" width="240">
-  &nbsp;
-  <img src="docs/screenshots/daily.png" alt="Daily puzzle" width="240">
-  &nbsp;
-  <img src="docs/screenshots/skin-dark.png" alt="The same game in a dark skin" width="240">
+  <img src="docs/screenshots/roguelike.png" alt="Roguelike run with modifier cards" width="560">
+  <br><em>A roguelike run — stacking modifier cards above the board.</em>
 </p>
-<p align="center"><em>Roguelike run · Daily · a Balatro-inspired dark skin</em></p>
 
 ## Tech stack
 
