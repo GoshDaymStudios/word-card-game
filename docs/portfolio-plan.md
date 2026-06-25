@@ -17,7 +17,7 @@ you can still feature it on your personal profile. Alternatives if you prefer:
 ## B. Pre-publish prep (do before flipping to Public)
 
 1. **Secrets** — ✅ already clean (verified: no `.env`, no keys/passwords tracked).
-2. **`contributions-and-learning.md`** — it openly says AI wrote most of the code. For a
+2. **`architecture-and-decisions.md`** — it openly says AI wrote most of the code. For a
    public portfolio, decide: keep / move out to a private note / reframe as "Architecture &
    decisions". (Commit messages also carry `Co-Authored-By: Claude` — fine, AI-assisted is
    normal; not worth rewriting history.)
@@ -26,7 +26,7 @@ you can still feature it on your personal profile. Alternatives if you prefer:
    - 2–4 **screenshots / a GIF** (gameplay, the theme switcher, leaderboard).
    - Tech stack + a short **architecture** blurb (two games / one app, Supabase, Docker, CI/CD).
    - A "what I built / can explain" section (Docker multi-stage, SPA fallback, RLS, CI/CD,
-     failure-domain monitoring) — pull highlights from `contributions-and-learning.md §3`.
+     failure-domain monitoring) — pull highlights from `architecture-and-decisions.md §3`.
    - Badges (CI passing), and a LICENSE (MIT is fine).
 4. **Minor tidy (optional):** the VPS path `/home/tor/apps/...` and username in
    `deploy.yml`, and the domain in `vite.config.ts` — low risk (the site is public anyway),
