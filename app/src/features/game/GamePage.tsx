@@ -40,11 +40,6 @@ export default function GamePage() {
   const [message, setMessage] = useState("");
   const [savedId, setSavedId] = useState<number | null>(null);
 
-  // Intro sting when entering the run.
-  useEffect(() => {
-    playSfx("Goshdaymstudios-original", { volume: 0.7 });
-  }, []);
-
   // Music while playing; on game over wait for the flip cascade to finish, then cut the
   // music and play the win/lose sting so it lands cleanly.
   useEffect(() => {

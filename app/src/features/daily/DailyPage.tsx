@@ -37,11 +37,6 @@ export default function DailyPage() {
   const len = state.answer.length;
   const done = state.status !== "playing";
 
-  // Intro sting when entering the daily game.
-  useEffect(() => {
-    playSfx("Goshdaymstudios-original", { volume: 0.7 });
-  }, []);
-
   // Win / lose sting, after the flip cascade of the final guess.
   useEffect(() => {
     if (state.status === "won" || state.status === "lost") {
