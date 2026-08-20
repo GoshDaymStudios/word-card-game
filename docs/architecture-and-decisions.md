@@ -54,3 +54,46 @@ differs.
 
 See `docs/game-design.md` (the game design/plan) and `docs/design-system.md` (visual/audio)
 for detail.
+
+## Planned: infrastructure as code (Azure + Terraform)
+
+**Decision (2026-08-20):** the infrastructure this app runs on is currently set up by hand — a
+Hetzner VPS with host-Nginx, Let's Encrypt and UFW, described in prose rather than defined in
+code. That is the one real gap in an otherwise complete ship-it-and-operate-it stack, and it
+gets closed by defining an Azure environment for this same app in Terraform under
+`infra/terraform/`.
+
+**How:** Azure Container Apps running the existing image, Key Vault for secrets, a custom domain
+with a managed certificate, and Log Analytics. Supabase stays as the database in the first pass —
+swapping it for Postgres Flexible Server is a separate exercise, not a prerequisite.
+
+**Run it alongside production, not as a cutover.** The Hetzner deployment keeps serving
+birkelandboss.no while the Terraform environment is built and torn down repeatedly. Whether Azure
+becomes the real production is decided later, with actual monthly cost numbers on the table — not
+as a side effect of learning the tool.
+
+**Cost control is part of the exercise:** a budget alert is set before the first `terraform apply`,
+and the environment is destroyed between sessions. Being able to answer "what does this cost per
+month" is part of the skill.
+
+**Definition of done:** `terraform destroy` followed by `terraform apply` takes an empty
+subscription to a running app that answers 200 on `/health`, with no manual clicking in the
+portal, documented in `infra/terraform/README.md`.
+
+Rationale and the wider sequence live in `../cashflow-os/docs/strategy/05-plattformstigen.md`
+(steps P1 and P3).
+
+## Case study material
+
+This project doubles as the reference case for production/platform work. The parts worth telling:
+
+- **A real production outage, diagnosed and fixed.** Switching the container from the Vite dev
+  server to a static Nginx build took production blank: Vite inlines environment variables at
+  *build* time, and the Docker build had none. Fixed by passing them as build args. A concrete
+  build-time-vs-runtime lesson, not a hypothetical one.
+- **Security enforced in the database, not the client.** Row-level security means the public
+  Supabase key is safe to ship.
+- **Monitoring with the right nuance.** An external UptimeRobot check hits `/health` from
+  off-box, because a monitor on the same server dies with the server; Uptime Kuma provides the
+  dashboard. See `docs/monitoring.md`.
+- **Deployment secrets never live in the repo** — they are GitHub Secrets, injected at build time.
