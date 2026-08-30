@@ -64,86 +64,91 @@ type DailyState = {
 **Out of scope (for now):** multiple lengths, languages, themed days.
 
 ---
+## Mode B — Manuscript (Balatro-inspired roguelike, AS BUILT)
 
-## Mode B — Roguelike run (Balatro-core)
+**One sentence:** A run ("Manuscript") is 8 chapters of word rounds — two ordinary
+blinds and a boss per chapter — where tile chips × Flourish must beat an escalating
+target, funded by an ink economy and shaped by passive Muses, one-shot Inks and
+censor rules.
 
-**One sentence:** A run is a series of Wordle rounds with an escalating target score;
-between rounds you pick stacking modifiers — play until you fail a target or clear the
-final ante.
+**Theme/naming** (scriptorium — deliberately our own names, no Balatro terms):
 
-**Loop (one run):**
-1. Start: `lives = 3`, `score = 0`, `ante = 1`, no modifiers. Seeded RNG.
-2. Round = one word (Wordle feedback, ~5 attempts).
-3. Score = `(letter points + bonuses) × multiplier` (see below).
-4. Each ante has a **target score** — beat it to advance, miss it → lose a life / end.
-5. After clearing an ante: **pick 1 of 3 modifiers**; they stack (hold up to ~5).
-6. Difficulty scales: higher targets, longer/rarer words, later an alphabet/language axis.
-7. End: WIN by clearing the final ante (~8), LOSE on running out.
-8. Result (final score + modifiers) → saved & leaderboarded.
+| Concept | Name |
+|---|---|
+| Run | **Manuscript** · win screen: "Published!" |
+| Ante 1–8 | **Chapter** |
+| Small/Big/Boss blind | **First Draft** (skippable) / **Fair Copy** / **The Censor** |
+| Jokers (max 5) | **Muses** |
+| Consumables (max 2) | **Inks** (vials) |
+| Currency | **Ink** ⬤ |
+| Shop | **The Scriptorium** |
+| Chips × Mult | **Letters × Flourish** (internally `chips`/`mult`) |
+| Stakes | **Ink Grades**: Charcoal → Sepia → Crimson → Violet → Gold |
 
-**Scoring (AS BUILT, `scoring.ts`):** solved word = `5 × 10 = 50` base; `+5` per unused
-guess (rewards fast solves); a round is only scored if solved (else 0). Pipeline:
-`base = letterPoints + attemptsBonus + Σ addBase`, `mult = (1 + Σ addMult) × Π timesMult`,
-`roundScore = round(base × mult)`. Targets: `round(40 × 1.5^(ante-1))` →
-40, 60, 90, 135, 203, 304, 456, 683. Base 40 means any solve clears ante 1; the curve
-forces modifier-driven scaling after that. Miss the target → lose a life, retry same ante.
+**Chapter loop:** blind-select (choose word length; Draft 4/5, Fair Copy 5/6, Censor
+6/7) → play the round → scoring cascade playback → Scriptorium → next blind. Failing
+a blind costs a life (start with 2) and returns to blind-select for the same blind.
+Chapter 8's censor is always The Editor-in-Chief; beating them wins.
 
-**Modifiers (AS BUILT — 8, `modifiers.ts`):** Vowel Lover (+2 mult/vowel), Patient (+1
-guess), Sniper (×2 if solved in ≤2), Comeback (×2 on last life), Snowball (+1 mult per ante
-already cleared), Scholar (+15 base), Gambler (+4 mult but −1 guess), Consonant Crusher (+1
-base per consonant). Stored as `ModifierId[]`; behavior lives in a registry. Hold up to 5.
-_(Design backlog, not yet built: Hot Start / Lucky 7 / Polyglot / Long Word Lover — need
-per-guess reveals or longer words first.)_
+**Scoring (`scoring.ts`):** green tile +8 chips, yellow +3, counted on every guess
+row; solve bonus +10 × word length; Flourish = 1 + 2 per unused guess + Σ muse
+addMult, times Π muse timesMult. Unsolved round = 0. The engine returns a full
+**trace** of events (tile/muse/bonus/final) which `ScorePlayback` replays as a paced
+cascade. Targets: base `[100, 230, 480, 900, 1500, 2400, 3600, 5200]` (tuned via the greedy-bot simulation in `sim/balance.test.ts`) × blind
+factor (1 / 1.5 / 2) × grade factor.
 
-**State (AS BUILT, `types.ts`):**
-```ts
-type RunState = {
-  seed: number;
-  ante: number;
-  targetScore: number;
-  score: number;            // cumulative across the run
-  lives: number;
-  modifiers: ModifierId[];
-  antesCleared: number;
-  roundNumber: number;      // drives the seeded RNG
-  offered: ModifierId[];    // the 3 choices shown while status === "choosing"
-  status: "playing" | "choosing" | "won" | "lost";
-  round: RoundState;
-};
-type RoundState = {
-  answer: string;
-  attemptsAllowed: number;
-  guesses: string[];
-  results: LetterResult[][];
-  roundScore: number;
-  status: "playing" | "cleared" | "failed";
-};
-```
-All JSON-serializable → fits `runs.run_data`.
+**Economy:** clearing pays 3/4/5⬤ by blind + 1⬤ per unused guess (cap 3) + interest
+(1⬤ per 5⬤ held, cap 5). Scriptorium: 3 rarity-weighted slots (~75% muse, rare 5% /
+uncommon 25% / common 70%), occasional extra-life item, reroll 5⬤ +1 per reroll,
+sell-back at half price.
 
-**Out of scope (for now):** persistence/login/leaderboard (real app does it), heavy
-animation, the full alphabet/language system (stub as one late-game difficulty modifier).
+**Content registries** (data rows + hook functions returning effect descriptors —
+see `effects.ts` for the contract):
+- **30 Muses** (`muses.ts`): 18 common / 9 uncommon / 3 rare. Hooks: onRoundStart /
+  onLetterScored / onGuessScored / onRoundEnd. Upgradeable via Copyist's Ink (level
+  scales the config numbers).
+- **8 Inks** (`inks.ts`): reveal a letter, rule out 5 letters, +1 guess, double
+  greens, swap the answer, upgrade a muse, shield a failure, +5⬤.
+- **11 Censors** (`censors.ts`): declarative rule bundles — banned letter, fewer
+  guesses, masked yellows, forced opening, guess tax, muted muse, forced 7-letter,
+  delayed feedback, demoted greens, raised target/double payout, and the combined
+  Editor-in-Chief.
+
+**Words (`lib/words/`):** answers per length (500/640/700/500 for 4/5/6/7) curated
+from a frequency list; guess validation against ENABLE dictionaries (lazy-loaded,
+code-split per length). Regenerate with `scripts/generate-wordlists.mjs`.
+
+**Determinism:** every random decision draws a named stream off the run seed
+(`lib/rng.ts` — `word:{n}`, `shop:{ante}:{blind}:{rerolls}`, `boss:{ante}`, …), so a
+seed fully determines a run. Seeds are shareable strings.
+
+**Persistence:** the whole `RunState` (v2, versioned) autosaves to localStorage on
+every change; reload resumes silently. `persistence.ts#migrateRun` gates loading.
+
+**Meta-progression (`lib/progress.ts`):** 13 achievements gate 20 of the 30 muses
+(10 available from the start); lifetime stats; Ink Grades unlock by winning the
+grade below (Sepia: 1 life · Crimson: +20% targets · Violet: pricier rerolls, lower
+interest cap · Gold: censor rules on Fair Copies too). Progress lives in
+localStorage and mirrors to Supabase `player_progress` when logged in (merge on
+load). The Collection page (`/collection`) shows everything, locked items as
+silhouettes with unlock hints.
 
 ---
 
-## Database — one table, two modes
+## Database — one table per concern
 
-Keep the minimal schema, add **one column** so both modes coexist:
-- `runs` gets `mode text not null default 'roguelike'` (`'daily' | 'roguelike'`).
-- Two leaderboards = filter by `mode`. `run_data` (jsonb) stays flexible per mode.
+- `runs` with `mode text` (`'daily' | 'roguelike'`) — two leaderboards by filter;
+  `run_data` (jsonb) holds the full serialized state.
+- `player_progress` — one row per player, `data` jsonb mirrors the client's
+  ProgressData (achievements, stats, grade ladder).
 
-See `supabase.md` for the migration + RLS policies.
+See `supabase.md` for schema + RLS.
 
 ---
 
-## Phased plan (two games, one app)
+## Status (2026-08-30)
 
-- **Phase 0** — Project structure + this design doc.
-- **Phase 1** — Shared `lib/words/` (list + `evaluateGuess`). Add `mode` column to `runs`.
-- **Phase 2 (parallel gameplay)** — A: `features/game/` (roguelike) · B: `features/daily/`.
-- **Phase 3 (parallel, gameplay-independent — Tor)** — `/health`, fill `infra/nginx/example.conf`,
-  CI lint+test, RLS policies, monitoring (UptimeRobot).
-- **Phase 4** — Wire completed runs to Supabase for both modes (real data shapes).
-- **Phase 5** — Two leaderboards (filter `mode`) + public share page (`/share/:id`).
-- **Phase 6** — Juice/polish both (animation, sound, theming).
-- **Phase 7** — Docs + README refresh.
+Phases 0–7 of the original plan are complete, plus the roguelike expansion: full
+chapter/censor loop, economy + Scriptorium, consumables, scoring-cascade juice, and
+the unlock tree. Remaining backlog: balance simulation tuning, editions on muse
+cards, skip-bookmarks, challenges, music assets, server-side score validation.

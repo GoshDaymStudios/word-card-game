@@ -60,7 +60,31 @@ drop policy if exists "runs readable by everyone" on public.runs;
 create policy "runs readable by everyone" on public.runs
   for select using (true);
 
--- 5. OPTIONAL cleanup --------------------------------------------------------
+-- 5. Meta-progression (achievements, unlocks, stats) --------------------------
+-- One row per player; the whole ProgressData blob lives in `data` (see
+-- app/src/lib/progress.ts). localStorage is authoritative client-side; this row
+-- mirrors it so progress follows a logged-in player across devices.
+create table if not exists public.player_progress (
+  user_id    uuid primary key references public.profiles(id) on delete cascade,
+  data       jsonb not null default '{}'::jsonb,
+  updated_at timestamptz not null default now()
+);
+
+alter table public.player_progress enable row level security;
+
+drop policy if exists "users read own progress" on public.player_progress;
+create policy "users read own progress" on public.player_progress
+  for select using (auth.uid() = user_id);
+
+drop policy if exists "users insert own progress" on public.player_progress;
+create policy "users insert own progress" on public.player_progress
+  for insert with check (auth.uid() = user_id);
+
+drop policy if exists "users update own progress" on public.player_progress;
+create policy "users update own progress" on public.player_progress
+  for update using (auth.uid() = user_id);
+
+-- 6. OPTIONAL cleanup --------------------------------------------------------
 -- Older databases may have legacy duplicate policies (capitalised names) from
 -- an earlier setup. They're harmless (permissive policies OR together) but
 -- cluttered. Uncomment to drop them; the policies created above fully replace them.

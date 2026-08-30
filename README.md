@@ -62,9 +62,13 @@ The game itself is intentionally simple. The interesting part is everything behi
 
 - **Daily** — a date-seeded Wordle: everyone gets the same word, with a streak and a shareable
   result.
-- **Roguelike** — a run of word rounds with rising target scores, three lives, and stacking
-  **modifiers** you pick between antes (vowel bonuses, fast-solve multipliers, comebacks…).
-  Clear the final ante to win; miss a target too often and the run ends.
+- **Manuscript (roguelike)** — 8 chapters, each with two ordinary blinds and a **censor**
+  boss round with its own rule. Choose your word length (4–7), score tile chips ×
+  Flourish against rising targets, and spend the **ink** you earn in the Scriptorium on
+  passive **Muses** (30, rarity-tiered, upgradeable), one-shot **Ink vials**, rerolls and
+  extra lives. Real-word dictionary validation, seeded shareable runs, autosave/resume,
+  a scoring-cascade animation, and an unlock tree: achievements open 20 of the 30 muses
+  and five escalating **Ink Grades**.
 
 <p align="center">
   <img src="docs/screenshots/roguelike.png" alt="Roguelike run with modifier cards" width="560">

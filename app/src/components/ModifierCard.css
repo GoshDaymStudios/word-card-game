@@ -23,6 +23,48 @@
   object-fit: cover;
 }
 
+.mod-card {
+  position: relative;
+}
+.mod-clickable {
+  cursor: pointer;
+}
+.mod-clickable:hover {
+  transform: translateY(-2px);
+  transition: transform 0.12s ease;
+}
+.mod-rarity-uncommon {
+  border-color: color-mix(in srgb, var(--accent) 70%, var(--border));
+  box-shadow: 0 0 8px color-mix(in srgb, var(--accent) 35%, transparent), var(--shadow);
+}
+.mod-rarity-rare {
+  border-color: var(--gold, #c9a227);
+  box-shadow: 0 0 10px color-mix(in srgb, var(--gold, #c9a227) 45%, transparent), var(--shadow);
+}
+.mod-disabled {
+  filter: grayscale(1) brightness(0.7);
+}
+.mod-gag {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  font-size: 1.4rem;
+  font-weight: 900;
+  color: #c0392b;
+}
+.mod-price {
+  position: absolute;
+  bottom: 2px;
+  right: 3px;
+  padding: 0 4px;
+  border-radius: 6px;
+  background: color-mix(in srgb, var(--panel) 80%, black);
+  color: var(--gold, #c9a227);
+  font-size: 0.62rem;
+  font-weight: 800;
+}
+
 .mod-fallback {
   padding: 4px;
   font-size: 0.62rem;

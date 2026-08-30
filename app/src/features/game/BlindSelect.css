@@ -1,0 +1,74 @@
+.blind-select {
+  display: grid;
+  gap: 1rem;
+  justify-items: center;
+}
+
+.blind-track {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  justify-content: center;
+  font-size: 0.8rem;
+}
+.blind-step {
+  padding: 2px 10px;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  opacity: 0.55;
+}
+.blind-step.current {
+  opacity: 1;
+  border-color: var(--accent);
+  color: var(--text-h);
+  font-weight: 700;
+}
+.blind-step.done {
+  opacity: 0.8;
+  text-decoration: line-through;
+}
+
+.blind-card {
+  width: 100%;
+  max-width: 380px;
+  padding: 1.25rem;
+  border-radius: 14px;
+  border: 1px solid var(--border);
+  background: linear-gradient(160deg, var(--panel-2), var(--panel));
+  box-shadow: var(--shadow);
+  display: grid;
+  gap: 0.75rem;
+}
+.blind-card.censor {
+  border-color: color-mix(in srgb, #c0392b 60%, var(--border));
+  box-shadow: 0 0 14px color-mix(in srgb, #c0392b 25%, transparent), var(--shadow);
+}
+.blind-title {
+  margin: 0;
+}
+.blind-rule {
+  margin: 0;
+  font-weight: 600;
+}
+.blind-flavor {
+  margin: 0;
+  font-style: italic;
+  opacity: 0.7;
+  font-size: 0.85rem;
+}
+.blind-stats {
+  margin: 0;
+}
+.blind-lengths {
+  display: grid;
+  gap: 0.5rem;
+}
+.blind-skip {
+  opacity: 0.75;
+}
+.blind-upcoming {
+  margin: 0;
+  max-width: 420px;
+  font-size: 0.85rem;
+  opacity: 0.75;
+}

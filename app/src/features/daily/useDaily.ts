@@ -1,4 +1,5 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
+import { isValidWord, loadDictionary } from "../../lib/words";
 import { getWordForDate, dateKey, getStreak, recordResult, type StreakInfo } from "./daily";
 import {
   createDailyGame,
@@ -16,6 +17,17 @@ export function useDaily() {
 
   const [state, setState] = useState<DailyState>(() => createDailyGame(answer));
   const [streak, setStreak] = useState<StreakInfo>(() => getStreak());
+
+  // Real-word validation (same dictionary the roguelike uses; null until loaded,
+  // in which case only the format is checked).
+  const dictRef = useRef<Set<string> | null>(null);
+  useEffect(() => {
+    void loadDictionary(5).then((d) => (dictRef.current = d));
+  }, []);
+
+  function isGuessValid(word: string): boolean {
+    return word.length === 5 && isValidWord(word.toLowerCase(), dictRef.current);
+  }
 
   function guess(word: string) {
     setState((current) => {
@@ -36,5 +48,14 @@ export function useDaily() {
     return toEmojiGrid(state, `Word Card — Daily ${dateKey(today)}`);
   }
 
-  return { state, streak, guess, reveal, shareText, score: dailyScore(state), dateKey: dateKey(today) };
+  return {
+    state,
+    streak,
+    guess,
+    isGuessValid,
+    reveal,
+    shareText,
+    score: dailyScore(state),
+    dateKey: dateKey(today),
+  };
 }

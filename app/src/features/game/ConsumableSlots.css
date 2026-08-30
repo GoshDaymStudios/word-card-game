@@ -1,0 +1,33 @@
+.vials {
+  display: flex;
+  gap: 0.5rem;
+  justify-content: center;
+}
+.vial {
+  width: 74px;
+  min-height: 54px;
+  padding: 0.3rem;
+  border-radius: 10px;
+  border: 1px dashed var(--border);
+  background: var(--panel);
+  display: grid;
+  gap: 2px;
+  place-items: center;
+  font-size: 0.62rem;
+  line-height: 1.1;
+  cursor: pointer;
+}
+.vial.empty {
+  opacity: 0.35;
+  cursor: default;
+}
+.vial.locked {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+.vial-glyph {
+  font-size: 1.1rem;
+}
+.vial-name {
+  text-align: center;
+}

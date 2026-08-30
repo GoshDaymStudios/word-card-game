@@ -95,6 +95,12 @@ export function playSfx(name: string, opts: SfxOpts = {}): void {
     // Built-in synth fallbacks so the UI is audible before any files are added.
     if (name === "click") synthBlip(420, 0.16, 0.09, "triangle");
     else if (name === "flip") synthBlip(300 * rate, 0.08, 0.06, "square");
+    else if (name === "win") {
+      // Rising major arpeggio.
+      [523, 659, 784, 1047].forEach((freq, i) => {
+        window.setTimeout(() => synthBlip(freq, 0.18, 0.22, "triangle"), i * 110);
+      });
+    }
     return;
   }
   const a = new Audio(url);
