@@ -1,0 +1,111 @@
+.playback {
+  display: grid;
+  gap: 1rem;
+  justify-items: center;
+  cursor: pointer;
+  user-select: none;
+}
+
+/* Two alternating micro-shake animations so consecutive hits retrigger. */
+@keyframes shake-a {
+  0% { transform: translate(0, 0) rotate(0); }
+  25% { transform: translate(1.5px, -1px) rotate(0.2deg); }
+  50% { transform: translate(-1.5px, 1px) rotate(-0.2deg); }
+  100% { transform: translate(0, 0) rotate(0); }
+}
+@keyframes shake-b {
+  0% { transform: translate(0, 0) rotate(0); }
+  25% { transform: translate(-1.5px, -1px) rotate(-0.2deg); }
+  50% { transform: translate(1.5px, 1px) rotate(0.2deg); }
+  100% { transform: translate(0, 0) rotate(0); }
+}
+.shake-a { animation: shake-a 0.18s ease-out; }
+.shake-b { animation: shake-b 0.18s ease-out; }
+
+/* Damped squash-and-stretch on a scored tile. */
+@keyframes tile-pop {
+  0% { transform: scale(1, 1); }
+  30% { transform: scale(1.18, 0.85); }
+  60% { transform: scale(0.94, 1.08); }
+  100% { transform: scale(1, 1); }
+}
+.tile-pop {
+  animation: tile-pop 0.22s ease-out;
+}
+
+.float {
+  position: absolute;
+  transform: translateX(-50%);
+  font-weight: 900;
+  font-size: 0.95rem;
+  pointer-events: none;
+  animation: float-up 0.7s ease-out forwards;
+}
+@keyframes float-up {
+  0% { opacity: 0; margin-top: 0; }
+  15% { opacity: 1; }
+  100% { opacity: 0; margin-top: -26px; }
+}
+.float-green { color: #2e7d32; }
+.float-yellow { color: #b98b00; }
+
+.playback-muses {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+.playback-muse {
+  position: relative;
+}
+@keyframes muse-hit {
+  0% { transform: scale(1) rotate(0); }
+  35% { transform: scale(1.15, 0.9) rotate(-2deg); }
+  70% { transform: scale(0.95, 1.06) rotate(1.2deg); }
+  100% { transform: scale(1) rotate(0); }
+}
+.muse-hit {
+  animation: muse-hit 0.3s ease-out;
+}
+.muse-float {
+  position: absolute;
+  top: -18px;
+  left: 50%;
+  transform: translateX(-50%);
+  white-space: nowrap;
+  font-size: 0.72rem;
+  font-weight: 800;
+  color: #c0392b;
+  animation: float-up 1.1s ease-out forwards;
+}
+
+.playback-tally {
+  display: flex;
+  gap: 10px;
+  align-items: baseline;
+  font-size: 1.6rem;
+  font-weight: 900;
+}
+.tally-chips { color: #2e6da4; }
+.tally-x { opacity: 0.6; font-size: 1.1rem; }
+.tally-mult { color: #c0392b; }
+.tally-total { margin-left: 6px; }
+.tally-total.cleared { color: var(--gold, #c9a227); }
+.tally-total.missed { color: #c0392b; }
+
+.playback-target {
+  margin: 0;
+  font-size: 0.9rem;
+}
+.playback-hint {
+  margin: 0;
+  font-size: 0.75rem;
+  opacity: 0.55;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .shake-a, .shake-b, .tile-pop, .muse-hit, .float, .muse-float {
+    animation: none;
+  }
+  .float, .muse-float { opacity: 0.9; }
+}

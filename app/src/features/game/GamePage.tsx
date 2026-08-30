@@ -10,6 +10,7 @@ import { ModifierCard } from "../../components/ModifierCard";
 import { BlindSelect } from "./BlindSelect";
 import { ShopView } from "./ShopView";
 import { ConsumableSlots } from "./ConsumableSlots";
+import { ScorePlayback } from "./ScorePlayback";
 import { ensureMusic, stopMusic, playSfx, playFlipRow } from "../../lib/sound";
 import type { LetterResult } from "../../lib/words";
 
@@ -46,6 +47,14 @@ export default function GamePage() {
   const [input, setInput] = useState("");
   const [message, setMessage] = useState("");
   const [savedId, setSavedId] = useState<number | null>(null);
+  // When a round just finished with a solved word, replay the scoring cascade before
+  // showing the next screen. Derived: playback shows until this trace is dismissed.
+  const [dismissedTrace, setDismissedTrace] = useState<object | null>(null);
+  const showPlayback =
+    run.status !== "playing" &&
+    run.lastTrace !== null &&
+    run.lastTrace.length > 1 &&
+    dismissedTrace !== run.lastTrace;
 
   // Music while playing; on game over wait for the flip cascade, then the sting.
   useEffect(() => {
@@ -188,8 +197,16 @@ export default function GamePage() {
         </span>
       </div>
 
+      {showPlayback && run.lastTrace && (
+        <ScorePlayback
+          run={run}
+          trace={run.lastTrace}
+          onDone={() => setDismissedTrace(run.lastTrace)}
+        />
+      )}
+
       {/* Muse row + vials */}
-      {(run.muses.length > 0 || run.consumables.length > 0) && (
+      {!showPlayback && (run.muses.length > 0 || run.consumables.length > 0) && (
         <div
           style={{
             display: "flex",
@@ -264,7 +281,7 @@ export default function GamePage() {
         </>
       )}
 
-      {run.status === "round-failed" && (
+      {!showPlayback && run.status === "round-failed" && (
         <div style={{ display: "grid", gap: "0.75rem", maxWidth: 380, margin: "0 auto" }}>
           <h2 style={{ margin: 0, color: "#c0392b" }}>
             {run.shielded ? "Draft rejected" : "Draft rejected — a life lost"}
@@ -280,7 +297,7 @@ export default function GamePage() {
         </div>
       )}
 
-      {run.status === "shop" && (
+      {!showPlayback && run.status === "shop" && (
         <>
           {lastCleared && (
             <p style={{ margin: "0 0 0.75rem", fontWeight: 600 }}>
@@ -298,7 +315,7 @@ export default function GamePage() {
         </>
       )}
 
-      {(run.status === "won" || run.status === "lost") && (
+      {!showPlayback && (run.status === "won" || run.status === "lost") && (
         <div style={{ display: "grid", gap: "0.75rem", maxWidth: 340, margin: "0 auto" }}>
           <h2 style={{ margin: 0 }}>
             {run.status === "won"
