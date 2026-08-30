@@ -6,6 +6,7 @@ const LINKS = [
   { to: "/daily", label: "Daily" },
   { to: "/game", label: "Play" },
   { to: "/leaderboard", label: "Leaderboard" },
+  { to: "/runs", label: "My Runs" },
   { to: "/auth", label: "Account" },
 ];
 

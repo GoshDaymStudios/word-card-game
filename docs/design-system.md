@@ -105,7 +105,8 @@ app/src/assets/
   flips/   <name>.mp3    selectable flip clips (drop ~any number)
 ```
 
-**Intro:** entering Daily or Roguelike plays `sfx/Goshdaymstudios-original.*`.
+**Win:** solving a word plays `sfx/win.*`; with no file present, a built-in rising synth
+arpeggio plays instead (same fallback idea as click/flip).
 
 **Game over:** losing (Daily or Roguelike) plays `sfx/lose.*` ~750ms after the final guess
 (so it lands after the flip cascade); roguelike also cuts the music.
