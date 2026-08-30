@@ -29,7 +29,7 @@ function Streak({ count }: { count: number }) {
 }
 
 export default function DailyPage() {
-  const { state, streak, guess, reveal, shareText, score, dateKey } = useDaily();
+  const { state, streak, guess, isGuessValid, reveal, shareText, score, dateKey } = useDaily();
   const [input, setInput] = useState("");
   const [toast, setToast] = useState("");
   const [saved, setSaved] = useState(false);
@@ -50,6 +50,10 @@ export default function DailyPage() {
     if (done) return;
     if (input.length !== len) {
       setToast(`Word must be ${len} letters`);
+      return;
+    }
+    if (!isGuessValid(input)) {
+      setToast(`“${input.toUpperCase()}” is not in the dictionary`);
       return;
     }
     guess(input);
