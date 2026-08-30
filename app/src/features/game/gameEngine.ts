@@ -22,7 +22,7 @@ export const MAX_CONSUMABLES = 2;
 export const MAX_LIVES = 4;
 export const STARTING_INK = 4;
 
-const BASE_TARGETS = [100, 240, 550, 1200, 2700, 6000, 13000, 28000];
+const BASE_TARGETS = [100, 230, 480, 900, 1500, 2400, 3600, 5200];
 const BLIND_FACTOR: Record<BlindKind, number> = { draft: 1, faircopy: 1.5, censor: 2 };
 const BLIND_PAYOUT: Record<BlindKind, number> = { draft: 3, faircopy: 4, censor: 5 };
 const UNUSED_GUESS_INK_CAP = 3;

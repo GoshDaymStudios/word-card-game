@@ -94,7 +94,7 @@ Chapter 8's censor is always The Editor-in-Chief; beating them wins.
 row; solve bonus +10 × word length; Flourish = 1 + 2 per unused guess + Σ muse
 addMult, times Π muse timesMult. Unsolved round = 0. The engine returns a full
 **trace** of events (tile/muse/bonus/final) which `ScorePlayback` replays as a paced
-cascade. Targets: base `[100, 240, 550, 1200, 2700, 6000, 13000, 28000]` × blind
+cascade. Targets: base `[100, 230, 480, 900, 1500, 2400, 3600, 5200]` (tuned via the greedy-bot simulation in `sim/balance.test.ts`) × blind
 factor (1 / 1.5 / 2) × grade factor.
 
 **Economy:** clearing pays 3/4/5⬤ by blind + 1⬤ per unused guess (cap 3) + interest
