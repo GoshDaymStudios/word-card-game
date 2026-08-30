@@ -2,6 +2,7 @@
 // JSON in localStorage — written on every state change (useGame), cleared when a run
 // ends or is abandoned. `migrateRun` gates loading: unknown versions are discarded
 // (the player is offered a fresh run) rather than half-migrated.
+import { ALL_MUSE_IDS } from "./muses";
 import type { RunState } from "./types";
 
 const KEY = "manuscript-run-v1";
@@ -42,8 +43,11 @@ export function migrateRun(raw: unknown): RunState | null {
   if (typeof raw !== "object" || raw === null) return null;
   const version = (raw as { version?: unknown }).version;
   switch (version) {
-    case 2:
-      return raw as RunState;
+    case 2: {
+      const run = raw as RunState;
+      // Field added after the first v2 saves shipped; default keeps old saves valid.
+      return { ...run, musePool: run.musePool ?? ALL_MUSE_IDS };
+    }
     default:
       return null;
   }

@@ -49,6 +49,7 @@ export type RunState = {
   ink: number; // currency
   lives: number;
   muses: OwnedMuse[];
+  musePool: MuseId[]; // muses this run can offer (snapshot of unlocks at run start)
   consumables: InkId[]; // held ink vials (max slots in gameEngine)
   bossId: CensorId; // this chapter's censor (revealed at chapter start)
   shielded: boolean; // Blotting Paper — next failed round costs no life

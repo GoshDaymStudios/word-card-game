@@ -103,7 +103,11 @@ function emptyRound(): RoundState {
 
 // ---- Run lifecycle ---------------------------------------------------------------
 
-export function createRun(seed: string = randomSeed(), stake = 1): RunState {
+export function createRun(
+  seed: string = randomSeed(),
+  stake = 1,
+  musePool: MuseId[] = ALL_MUSE_IDS,
+): RunState {
   const state: RunState = {
     version: 2,
     seed,
@@ -116,6 +120,7 @@ export function createRun(seed: string = randomSeed(), stake = 1): RunState {
     ink: STARTING_INK,
     lives: stakeMods(stake).startLives,
     muses: [],
+    musePool,
     consumables: [],
     bossId: drawBoss(seed, 1),
     shielded: false,
@@ -293,10 +298,11 @@ export function generateShop(state: RunState, rerolls: number): ShopState {
   const pickMuse = (): MuseId | null => {
     const r = rng();
     const rarity = r < 0.05 ? "rare" : r < 0.3 ? "uncommon" : "common";
-    let pool = ALL_MUSE_IDS.filter(
+    let pool = state.musePool.filter(
       (id) => MUSES[id].rarity === rarity && !owned.has(id) && !inShop.has(id),
     );
-    if (pool.length === 0) pool = ALL_MUSE_IDS.filter((id) => !owned.has(id) && !inShop.has(id));
+    if (pool.length === 0)
+      pool = state.musePool.filter((id) => !owned.has(id) && !inShop.has(id));
     if (pool.length === 0) return null;
     return pickFrom(rng, pool);
   };

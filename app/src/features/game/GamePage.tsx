@@ -12,7 +12,10 @@ import { ShopView } from "./ShopView";
 import { ConsumableSlots } from "./ConsumableSlots";
 import { ScorePlayback } from "./ScorePlayback";
 import { ensureMusic, stopMusic, playSfx, playFlipRow } from "../../lib/sound";
+import { loadProgress } from "../../lib/progress";
 import type { LetterResult } from "../../lib/words";
+
+const GRADE_NAMES = ["Charcoal", "Sepia", "Crimson", "Violet", "Gold"];
 
 const CELL = 46;
 
@@ -47,6 +50,8 @@ export default function GamePage() {
   const [input, setInput] = useState("");
   const [message, setMessage] = useState("");
   const [savedId, setSavedId] = useState<number | null>(null);
+  const [grade, setGrade] = useState(1);
+  const maxGrade = Math.min(5, loadProgress().stakeCleared + 1);
   // When a round just finished with a solved word, replay the scoring cascade before
   // showing the next screen. Derived: playback shows until this trace is dismissed.
   const [dismissedTrace, setDismissedTrace] = useState<object | null>(null);
@@ -97,7 +102,7 @@ export default function GamePage() {
   }
 
   function handleNewRun() {
-    game.startNewGame();
+    game.startNewGame(undefined, grade);
     setInput("");
     setMessage("");
     setSavedId(null);
@@ -331,7 +336,53 @@ export default function GamePage() {
           ) : (
             <button onClick={handleShareRun}>Share run</button>
           )}
+          {maxGrade > 1 && (
+            <label style={{ fontSize: "0.85rem", display: "flex", gap: 8, justifyContent: "center", alignItems: "center" }}>
+              Ink Grade
+              <select value={grade} onChange={(e) => setGrade(Number(e.target.value))}>
+                {GRADE_NAMES.slice(0, maxGrade).map((name, i) => (
+                  <option key={name} value={i + 1}>
+                    {name}
+                  </option>
+                ))}
+              </select>
+            </label>
+          )}
           <button onClick={handleNewRun}>New manuscript</button>
+        </div>
+      )}
+
+      {/* Achievement toasts */}
+      {game.notices.length > 0 && (
+        <div
+          style={{
+            position: "fixed",
+            bottom: 16,
+            right: 16,
+            display: "grid",
+            gap: 8,
+            zIndex: 50,
+            maxWidth: 300,
+          }}
+        >
+          {game.notices.map((n, i) => (
+            <div
+              key={`${n}-${i}`}
+              onClick={() => game.dismissNotice(i)}
+              style={{
+                padding: "0.6rem 0.8rem",
+                borderRadius: 10,
+                border: "1px solid var(--border)",
+                background: "var(--panel)",
+                boxShadow: "var(--shadow)",
+                fontSize: "0.82rem",
+                textAlign: "left",
+                cursor: "pointer",
+              }}
+            >
+              {n}
+            </div>
+          ))}
         </div>
       )}
 

@@ -189,6 +189,27 @@ policy block in §10-B. Auth users in `auth.users` are NOT affected — only the
 
 ---
 
+## 11. Meta-progression table (player_progress)
+
+The roguelike's achievements/unlocks/stats mirror to one row per player. localStorage
+is authoritative client-side (`app/src/lib/progress.ts`); this table lets progress
+follow a logged-in player across devices (merged on load: union of achievements, max
+of stats).
+
+```sql
+create table if not exists public.player_progress (
+  user_id    uuid primary key references public.profiles(id) on delete cascade,
+  data       jsonb not null default '{}'::jsonb,
+  updated_at timestamptz not null default now()
+);
+alter table public.player_progress enable row level security;
+-- owner-only read/insert/update — see infra/supabase/schema.sql for the policies
+```
+
+Run `infra/supabase/schema.sql` (idempotent) to apply it.
+
+---
+
 ## Notes
 
 - This setup is for local development
